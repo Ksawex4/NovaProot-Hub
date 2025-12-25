@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://bw4v1jc4pj0jo"]
+
+[ext_resource type="Script" uid="uid://iffvbyoqy3i5" path="res://scripts/background.gd" id="1_bwdwl"]
+[ext_resource type="PackedScene" uid="uid://dfkjh6coao8y6" path="res://scenes/game_entry.tscn" id="2_rsb3a"]
+[ext_resource type="Script" uid="uid://d27123pwwj8v0" path="res://scripts/games.gd" id="2_uttt5"]
+
+[node name="MainDesktop" type="Node2D"]
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -1
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(0.13333334, 0.16862746, 0.27058825, 1)
+script = ExtResource("1_bwdwl")
+
+[node name="Games" type="VBoxContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_uttt5")
+
+[node name="GameEntry" parent="Games" instance=ExtResource("2_rsb3a")]
+layout_mode = 2
+
+[node name="GameEntry2" parent="Games" instance=ExtResource("2_rsb3a")]
+layout_mode = 2

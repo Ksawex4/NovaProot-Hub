@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://dfkjh6coao8y6"]
+
+[ext_resource type="Texture2D" uid="uid://kl1qyu38ysxp" path="res://icon.svg" id="1_erg1a"]
+[ext_resource type="Script" uid="uid://b5agh8hls1fjd" path="res://scripts/game_entry.gd" id="1_p0i1h"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_p0i1h"]
+font_size = 32
+
+[node name="GameEntry" type="Button"]
+custom_minimum_size = Vector2(148, 128)
+offset_right = 356.0
+offset_bottom = 127.0
+script = ExtResource("1_p0i1h")
+
+[node name="Icon" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 128.0
+texture = ExtResource("1_erg1a")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Name" type="Label" parent="."]
+layout_mode = 0
+offset_left = 138.0
+offset_top = 40.0
+offset_right = 343.0
+offset_bottom = 85.0
+text = "Block Jumper"
+label_settings = SubResource("LabelSettings_p0i1h")
