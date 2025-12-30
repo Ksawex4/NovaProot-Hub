@@ -25,7 +25,8 @@ func update_game(new_game_id: String) -> void:
 
 func _update_icon(result, _response_code, _headers, body) -> void:
 	if result != HTTPRequest.RESULT_SUCCESS:
-		push_error("Image couldn't be downloaded. Try a different image.")
+		push_warning("Image couldn't be downloaded.")
+		return
 
 	var image = Image.new()
 	if not body:

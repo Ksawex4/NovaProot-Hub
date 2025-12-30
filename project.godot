@@ -21,6 +21,7 @@ GamesMan="*res://scripts/globals/GamesManager.gd"
 GithubApiMan="*res://scripts/globals/GithubApiMan.gd"
 SaveMan="*res://scripts/globals/SaveManager.gd"
 ZipMan="*res://scripts/globals/ZipManager.gd"
+FileMan="*res://scripts/globals/FileManager.gd"
 
 [rendering]
 

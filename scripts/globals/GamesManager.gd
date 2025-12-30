@@ -10,7 +10,11 @@ signal UpdateGames()
 func _ready() -> void:
 	add_child(Http_requester)
 	Http_requester.request_completed.connect(self._request_complete)
-	var err := Http_requester.request("http://localhost:12345/games.json")
+	var headers := [
+		"Authorization: %s" % GithubApiMan.Api_key, 
+		"User-Agent: NovaProot-Hub",
+	]
+	var err := Http_requester.request("http://localhost:12345/games.json", headers)
 	if err != OK:
 		print("error with http request: ", err)
 

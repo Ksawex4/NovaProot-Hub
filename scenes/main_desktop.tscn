@@ -1,61 +1,103 @@
-[gd_scene load_steps=7 format=3 uid="uid://bw4v1jc4pj0jo"]
+[gd_scene load_steps=9 format=3 uid="uid://bw4v1jc4pj0jo"]
 
 [ext_resource type="Script" uid="uid://iffvbyoqy3i5" path="res://scripts/background.gd" id="1_bwdwl"]
 [ext_resource type="PackedScene" uid="uid://dfkjh6coao8y6" path="res://scenes/game_entry.tscn" id="2_rsb3a"]
 [ext_resource type="Script" uid="uid://d27123pwwj8v0" path="res://scripts/games.gd" id="2_uttt5"]
 [ext_resource type="Theme" uid="uid://ddkttranllejt" path="res://theme.tres" id="3_dmipi"]
 [ext_resource type="Script" uid="uid://ch5nfolwjnqeu" path="res://scripts/game_page.gd" id="3_wtlur"]
+[ext_resource type="Script" uid="uid://cl6mtal156fbu" path="res://scripts/launch.gd" id="5_yoxav"]
+[ext_resource type="Script" uid="uid://c82ue3a1tl3xf" path="res://scripts/settings.gd" id="7_uxsxu"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_uttt5"]
 font_size = 28
 
 [node name="MainDesktop" type="Node2D"]
 
-[node name="HSplitContainer" type="HSplitContainer" parent="."]
-offset_right = 1132.0
-offset_bottom = 307.0
+[node name="TabContainer" type="TabContainer" parent="."]
+offset_right = 1153.0
+offset_bottom = 40.0
+current_tab = 1
 
-[node name="Games" type="VBoxContainer" parent="HSplitContainer"]
+[node name="Games" type="TabBar" parent="TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Games" type="HSplitContainer" parent="TabContainer/Games"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 31.0
+offset_right = 563.0
+offset_bottom = 622.0
+
+[node name="Games" type="VBoxContainer" parent="TabContainer/Games/Games"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 script = ExtResource("2_uttt5")
 
-[node name="GameEntry" parent="HSplitContainer/Games" instance=ExtResource("2_rsb3a")]
+[node name="GameEntry" parent="TabContainer/Games/Games/Games" instance=ExtResource("2_rsb3a")]
 z_index = 2
 layout_mode = 2
 
-[node name="GameEntry2" parent="HSplitContainer/Games" instance=ExtResource("2_rsb3a")]
+[node name="GameEntry2" parent="TabContainer/Games/Games/Games" instance=ExtResource("2_rsb3a")]
 layout_mode = 2
 
-[node name="GamePage" type="VBoxContainer" parent="HSplitContainer"]
+[node name="GamePage" type="VBoxContainer" parent="TabContainer/Games/Games"]
 layout_mode = 2
 script = ExtResource("3_wtlur")
 
-[node name="Icon" type="TextureRect" parent="HSplitContainer/GamePage"]
+[node name="Icon" type="TextureRect" parent="TabContainer/Games/Games/GamePage"]
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 2
 
-[node name="Middle" type="HBoxContainer" parent="HSplitContainer/GamePage"]
+[node name="Middle" type="HBoxContainer" parent="TabContainer/Games/Games/GamePage"]
 layout_mode = 2
 
-[node name="Play" type="Button" parent="HSplitContainer/GamePage/Middle"]
+[node name="Launch" type="Button" parent="TabContainer/Games/Games/GamePage/Middle"]
 layout_mode = 2
 theme = ExtResource("3_dmipi")
-text = "Launch"
+text = "Wait"
+script = ExtResource("5_yoxav")
 
-[node name="GameName" type="Label" parent="HSplitContainer/GamePage/Middle"]
+[node name="GameName" type="Label" parent="TabContainer/Games/Games/GamePage/Middle"]
 layout_mode = 2
 text = "No Game"
 label_settings = SubResource("LabelSettings_uttt5")
 
-[node name="Versions" type="OptionButton" parent="HSplitContainer/GamePage/Middle"]
+[node name="Versions" type="OptionButton" parent="TabContainer/Games/Games/GamePage/Middle"]
 layout_mode = 2
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Os" type="OptionButton" parent="TabContainer/Games/Games/GamePage/Middle"]
+layout_mode = 2
+
+[node name="Changelog" type="RichTextLabel" parent="TabContainer/Games/Games/GamePage"]
+custom_minimum_size = Vector2(0, 320)
+layout_mode = 2
+
+[node name="Background" type="ColorRect" parent="TabContainer/Games"]
 z_index = -1
-offset_right = 40.0
-offset_bottom = 40.0
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 31.0
 mouse_filter = 2
 color = Color(0.13333334, 0.16862746, 0.27058825, 1)
 script = ExtResource("1_bwdwl")
+
+[node name="Settings" type="TabBar" parent="TabContainer"]
+layout_mode = 2
+script = ExtResource("7_uxsxu")
+metadata/_tab_index = 1
+
+[node name="GithubApiKey" type="LineEdit" parent="TabContainer/Settings"]
+layout_mode = 0
+offset_top = 16.0
+offset_right = 120.0
+offset_bottom = 47.0
+placeholder_text = "API key"
+
+[connection signal="pressed" from="TabContainer/Games/Games/GamePage/Middle/Launch" to="TabContainer/Games/Games/GamePage" method="_on_launch_pressed"]
+[connection signal="item_selected" from="TabContainer/Games/Games/GamePage/Middle/Versions" to="TabContainer/Games/Games/GamePage" method="_on_versions_item_selected"]
+[connection signal="text_submitted" from="TabContainer/Settings/GithubApiKey" to="TabContainer/Settings" method="_on_github_api_key_text_submitted"]

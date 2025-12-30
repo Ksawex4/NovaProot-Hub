@@ -3,13 +3,18 @@ extends Node
 const TAGS_URL = "https://api.github.com/repos/REPO/tags" # REPO is for example Ksawex4/Block-Jumper
 const RELEASE_URL = "https://api.github.com/repos/REPO/releases/tags/TAG"
 var Http_requester := HTTPRequest.new()
+var Api_key: String = ""
 
 func _ready() -> void:
 	add_child(Http_requester)
 
 # repository has to be Author/Repository for example "Ksawex4/Block-Jumper
 func get_repo_tags(repository: String) -> Array:
-	Http_requester.request(TAGS_URL.replace("REPO", repository))
+	var headers := [
+		"Authorization: %s" % GithubApiMan.Api_key, 
+		"User-Agent: NovaProot-Hub",
+	]
+	Http_requester.request(TAGS_URL.replace("REPO", repository), headers)
 	var result: Array = await Http_requester.request_completed
 	var body = result[3]
 	if result[0] != OK:
@@ -34,7 +39,11 @@ func get_repo_tags(repository: String) -> Array:
 
 
 func get_repo_version(repository: String, version: String) -> Dictionary:
-	Http_requester.request(RELEASE_URL.replace("REPO", repository).replace("TAG", version))
+	var headers := [
+		"Authorization: %s" % GithubApiMan.Api_key, 
+		"User-Agent: NovaProot-Hub",
+	]
+	Http_requester.request(RELEASE_URL.replace("REPO", repository).replace("TAG", version), headers)
 	
 	var result: Array = await Http_requester.request_completed
 	var body = result[3]
@@ -51,6 +60,7 @@ func get_repo_version(repository: String, version: String) -> Dictionary:
 		return {}
 	var response = json.get_data()
 	
+	print(response)
 	var data := {}
 	data.set("name", response.get("name", "Failed to get name"))
 	data.set("body", response.get("body", "Failed to get body"))
@@ -70,24 +80,30 @@ func get_repo_version(repository: String, version: String) -> Dictionary:
 			continue
 	data.set("assets", game_downloads)
 	
-	return {}
+	return data
 
 
 ## return an empty string if failed, else returns the path of the downloaded file for the game
 func download_game(url: String, save_file_path: String = "user://downloads/") -> String:
+	print("download begin")
 	var downloaded_file_path := save_file_path + url.get_file()
 	Http_requester.download_file = downloaded_file_path
-	Http_requester.request(url)
+	var headers := [
+		"Authorization: %s" % GithubApiMan.Api_key, 
+		"User-Agent: NovaProot-Hub",
+	]
+	Http_requester.request(url, headers)
 	var result: Array = await Http_requester.request_completed
 	if result[0] != OK:
-		print("result is ", result)
+		print("result is ", result[0])
 		return ""
 	if result[1] != 200:
 		print("response code ", result[1])
 		return ""
 	
 	if not FileAccess.file_exists(downloaded_file_path):
-		push_error("File doesn't exist??")
+		push_error("Downloaded file, missing after write: ", downloaded_file_path)
 		return ""
 	
+	print("download finish")
 	return downloaded_file_path
