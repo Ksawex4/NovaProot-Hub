@@ -24,6 +24,13 @@ ZipMan="*res://scripts/globals/ZipManager.gd"
 GithubApiMan="*res://scripts/globals/GithubApiMan.gd"
 GamesMan="*res://scripts/globals/GamesManager.gd"
 
+[file_customization]
+
+folder_colors={
+"res://scenes/": "blue",
+"res://scripts/": "red"
+}
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
