@@ -17,11 +17,12 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GamesMan="*res://scripts/globals/GamesManager.gd"
-GithubApiMan="*res://scripts/globals/GithubApiMan.gd"
+HttpMan="*res://scripts/globals/HttpManager.gd"
 SaveMan="*res://scripts/globals/SaveManager.gd"
-ZipMan="*res://scripts/globals/ZipManager.gd"
 FileMan="*res://scripts/globals/FileManager.gd"
+ZipMan="*res://scripts/globals/ZipManager.gd"
+GithubApiMan="*res://scripts/globals/GithubApiMan.gd"
+GamesMan="*res://scripts/globals/GamesManager.gd"
 
 [rendering]
 

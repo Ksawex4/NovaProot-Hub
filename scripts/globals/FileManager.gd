@@ -6,7 +6,6 @@ func game_version_exists(game_id: String, version: String) -> bool:
 
 
 func download_game(game_id: String, version: String, game_release: Dictionary, os: String) -> void:
-	#var game = GamesMan.Games.get(game_id)
 	print(game_release)
 	var assets: Dictionary = game_release.get("assets", {})
 	var game_url: String = assets.get(os, "")
