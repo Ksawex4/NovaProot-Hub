@@ -71,3 +71,23 @@ func get_repo_version(repository: String, version: String) -> Dictionary:
 	data.set("assets", game_downloads)
 	
 	return {}
+
+
+## return an empty string if failed, else returns the path of the downloaded file for the game
+func download_game(url: String, save_file_path: String = "user://downloads/") -> String:
+	var downloaded_file_path := save_file_path + url.get_file()
+	Http_requester.download_file = downloaded_file_path
+	Http_requester.request(url)
+	var result: Array = await Http_requester.request_completed
+	if result[0] != OK:
+		print("result is ", result)
+		return ""
+	if result[1] != 200:
+		print("response code ", result[1])
+		return ""
+	
+	if not FileAccess.file_exists(downloaded_file_path):
+		push_error("File doesn't exist??")
+		return ""
+	
+	return downloaded_file_path
