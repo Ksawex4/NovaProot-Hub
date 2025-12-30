@@ -1,13 +1,14 @@
 extends Button
 
 @onready var game_icon: TextureRect = $Icon
-@onready var game_name: Label = $Name
+@onready var Parent: VBoxContainer = $'..'
 var Game_id: String = ""
+var Http_requester := HTTPRequest.new()
 
 
 func _ready() -> void:
-	custom_minimum_size = Vector2(game_icon.size.x + 20 + game_name.size.x, game_icon.size.y)
-	size = custom_minimum_size
+	Http_requester.request_completed.connect(self._update_icon)
+	add_child(Http_requester)
 
 
 func update_game(new_game_id: String) -> void:
@@ -15,8 +16,27 @@ func update_game(new_game_id: String) -> void:
 	if Game_id:
 		var game_data = GamesMan.Games.get(Game_id)
 		if game_data is Dictionary and game_data:
-			game_name.text = game_data["name"]
-	
-	await get_tree().physics_frame
-	custom_minimum_size = Vector2(game_icon.size.x + 20 + game_name.size.x, game_icon.size.y)
-	size = custom_minimum_size
+			await get_tree().physics_frame
+			text = game_data.get("name", "Nonexistent Name")
+			var iconer = game_data.get("icon")
+			if iconer:
+				Http_requester.request(iconer)
+			
+
+func _update_icon(result, _response_code, _headers, body) -> void:
+	if result != HTTPRequest.RESULT_SUCCESS:
+		push_error("Image couldn't be downloaded. Try a different image.")
+
+	var image = Image.new()
+	if not body:
+		return
+	var error = image.load_png_from_buffer(body)
+	if error != OK:
+		push_error("Couldn't load the image.")
+	var texture = ImageTexture.create_from_image(image)
+	if texture:
+		game_icon.texture = texture
+
+
+func _on_pressed() -> void:
+	Parent.game_page.update_shown_game(Game_id, icon)
