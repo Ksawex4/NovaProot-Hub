@@ -11,12 +11,14 @@ config_version=5
 [application]
 
 config/name="NovaProot Hub"
+run/main_scene="uid://bw4v1jc4pj0jo"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
-GamesMan="*res://scripts/GamesManager.gd"
+GamesMan="*res://scripts/globals/GamesManager.gd"
+GithubApiMan="*res://scripts/globals/GithubApiMan.gd"
 
 [rendering]
 

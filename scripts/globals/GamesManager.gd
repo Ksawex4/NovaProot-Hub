@@ -1,6 +1,6 @@
 extends Node
 # This scripts gets data for the games from the repo
-# getting certain release string: "/releases/tag/%s" % "v" + "0.1.0"
+# getting certain release string: "/releases/tags/%s" % "v0.1.0"
 
 var Http_requester := HTTPRequest.new()
 var Games: Dictionary = {}
