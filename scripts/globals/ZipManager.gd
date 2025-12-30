@@ -1,10 +1,14 @@
 extends Node
 
+var Remove_after_install
 func unzip_to_directory(path_to_zip: String, unzip_path: String="user://") -> void:
 	var reader := ZIPReader.new()
 	if not FileAccess.file_exists(path_to_zip):
 		push_warning("file_doesn't exist ", path_to_zip)
 		return
+	
+	if not DirAccess.dir_exists_absolute(unzip_path):
+		DirAccess.make_dir_recursive_absolute(unzip_path)
 	
 	var root_dir := DirAccess.open(unzip_path)
 	
@@ -19,3 +23,6 @@ func unzip_to_directory(path_to_zip: String, unzip_path: String="user://") -> vo
 		var file = FileAccess.open(root_dir.get_current_dir().path_join(file_path), FileAccess.WRITE)
 		var buffer = reader.read_file(file_path)
 		file.store_buffer(buffer)
+	
+	if Remove_after_install and DirAccess.dir_exists_absolute(unzip_path) and FileAccess.file_exists(path_to_zip):
+		DirAccess.remove_absolute(path_to_zip)

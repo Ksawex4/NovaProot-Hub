@@ -7,7 +7,7 @@ signal UpdateGames()
 
 
 func _ready() -> void:
-	var response = await HttpMan.request("http://localhost:12345/games.json", true, false)
+	var response = await HttpMan.request("http://localhost:12345/games.json", true)
 	var err = response["error"]
 	if err != OK:
 		print("error with http request: ", err)

@@ -16,9 +16,10 @@ font_size = 28
 [node name="TabContainer" type="TabContainer" parent="."]
 offset_right = 1153.0
 offset_bottom = 40.0
-current_tab = 0
+current_tab = 1
 
 [node name="Games" type="TabBar" parent="TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -86,7 +87,6 @@ color = Color(0.13333334, 0.16862746, 0.27058825, 1)
 script = ExtResource("1_bwdwl")
 
 [node name="Settings" type="TabBar" parent="TabContainer"]
-visible = false
 layout_mode = 2
 script = ExtResource("7_uxsxu")
 metadata/_tab_index = 1
@@ -94,10 +94,18 @@ metadata/_tab_index = 1
 [node name="GithubApiKey" type="LineEdit" parent="TabContainer/Settings"]
 layout_mode = 0
 offset_top = 16.0
-offset_right = 120.0
+offset_right = 1151.0
 offset_bottom = 47.0
 placeholder_text = "API key"
+
+[node name="RemoveAfterInstall" type="CheckButton" parent="TabContainer/Settings"]
+layout_mode = 0
+offset_top = 56.0
+offset_right = 273.0
+offset_bottom = 87.0
+text = "Remove .zip/.apk after install"
 
 [connection signal="pressed" from="TabContainer/Games/Games/GamePage/Middle/Launch" to="TabContainer/Games/Games/GamePage" method="_on_launch_pressed"]
 [connection signal="item_selected" from="TabContainer/Games/Games/GamePage/Middle/Versions" to="TabContainer/Games/Games/GamePage" method="_on_versions_item_selected"]
 [connection signal="text_submitted" from="TabContainer/Settings/GithubApiKey" to="TabContainer/Settings" method="_on_github_api_key_text_submitted"]
+[connection signal="toggled" from="TabContainer/Settings/RemoveAfterInstall" to="TabContainer/Settings" method="_on_remove_after_install_toggled"]

@@ -2,9 +2,10 @@ extends Button
 
 enum States {
 	LAUNCH,
-	DOWNLOAD
+	DOWNLOAD,
+	WAITING
 }
-var State: States = States.DOWNLOAD
+var State: States = States.WAITING
 
 
 func update_state(game_id: String, version: String) -> void:
@@ -21,4 +22,7 @@ func on_pressed(game_id: String, version: String, game_release: Dictionary, os: 
 		States.LAUNCH:
 			pass
 		States.DOWNLOAD:
-			FileMan.download_game(game_id, version, game_release, os)
+			State = States.WAITING
+			text = "Wait"
+			await FileMan.download_game(game_id, version, game_release, os)
+			update_state(game_id, version)
