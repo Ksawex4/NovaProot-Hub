@@ -6,8 +6,7 @@ func game_version_exists(game_id: String, version: String, os: String) -> bool:
 
 
 func download_game(game_id: String, version: String, game_release: Dictionary, os: String) -> bool:
-	print(game_release)
-	print("game-id: %s\nversion: %s\ngame_release: %s\nos: %s" % [game_id, version, game_release, os])
+	print("Starting download for " + game_id + " version: " + version + "\ngame_release: %s\nos: %s" % [game_release, os])
 	var assets: Dictionary = game_release.get("assets", {})
 	var game_url: String = assets.get(os, "")
 	if game_url == "":
@@ -16,7 +15,7 @@ func download_game(game_id: String, version: String, game_release: Dictionary, o
 	var extension = ".zip"
 	if os == "Android":
 		extension = ".apk"
-	var download_path := await GithubApiMan.download_game(game_url, "%s-%s%s" % [game_id, version, extension] ,"user://downloads")
+	var download_path := await GithubApiMan.download_game(game_url, "%s-%s-%s%s" % [game_id, version, os, extension] ,"user://downloads")
 	
 	if not FileAccess.file_exists(download_path):
 		print("File doesn't exist!!")
@@ -37,4 +36,5 @@ func download_game(game_id: String, version: String, game_release: Dictionary, o
 				var full_path := ProjectSettings.globalize_path(dir.get_current_dir())
 				OS.create_process("chmod", ["+x", full_path + "/" + file])
 	
+	print("Finished ", game_id, " ", version)
 	return true
