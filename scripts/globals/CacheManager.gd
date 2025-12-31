@@ -1,20 +1,21 @@
 extends Node
 
 const CACHE_DIR = "user://cache"
-enum CacheErrors {
+enum CacheError {
 	SUCESS,
 	NO_URL,
 	DOWNLOAD_FAIL,
 	FILE_DOESNT_EXIST,
 	PARSE_ERROR,
+	READ_FAIL,
 }
 
 func get_icon(game_id: String, file_name: String="icon.png", url: String="") -> Texture2D:
 	if url == "":
 		url = GamesMan.Games.get(game_id)["icon"]
-	var request := await _get_cache(game_id, file_name, url)
-	if request["error"] != CacheErrors.SUCESS:
-		push_warning("Failed to get icon %s/%s" % [game_id, file_name])
+	var request := await _request_icon(game_id, file_name, url)
+	if request["error"] != CacheError.SUCESS:
+		push_warning("Failed to get icon %s" % [url])
 	
 	var image = Image.load_from_file(request["data"])
 	var texture = ImageTexture.create_from_image(image)
@@ -23,28 +24,86 @@ func get_icon(game_id: String, file_name: String="icon.png", url: String="") -> 
 	else:
 		push_warning("Texture file is not valid! Deleting ", request["data"])
 		DirAccess.remove_absolute(request["data"])
+		await _request_icon(game_id, file_name, url)
 	
 	return load("res://icon.svg")
 
 
+func _request_icon(game_id: String, file_name: String, url: String) -> Dictionary:
+	var folder_path := CACHE_DIR + "/%s" % game_id
+	var file_path := folder_path + "/%s" % file_name
+	
+	if not DirAccess.dir_exists_absolute(folder_path):
+		DirAccess.make_dir_recursive_absolute(folder_path)
+	
+	if FileAccess.file_exists(file_path):
+		return {"error": CacheError.SUCESS, "data": file_path}
+	
+	var request := await HttpMan.request_file(url, file_name, false, folder_path)
+	
+	if request["error"] != HttpMan.NovaError.SUCESS:
+		print("Failed to download icon, url: ", url, " error: ", request["error"])
+		return request
+	
+	return { "error": CacheError.SUCESS, "data": file_path }
+
+
 func get_games() -> Dictionary:
-	var cache := await _get_cache("", "games.json", "http://localhost:12345/games.json")
-	if cache["error"] != CacheErrors.SUCESS:
-		print("error")
-		return cache
-	var parse = parse_json(cache.get("data"))
-	print("parsed")
+	var url := "http://localhost:12345/games.json"
+	var request := await _request_games("games.json", url) # url will be https://github.com/Ksawex4/NovaProot-Hub/raw/refs/heads/main/data/games.json later
+	if request["error"] != CacheError.SUCESS:
+		print("Failed to get games, %s" % url)
+		return request
+	var parse = parse_json(request.get("data"))
 	return parse
+
+
+func _request_games(file_name: String, url: String) -> Dictionary:
+	var file_path := CACHE_DIR + "/%s" % file_name
+	
+	if not DirAccess.dir_exists_absolute(CACHE_DIR):
+		DirAccess.make_dir_recursive_absolute(CACHE_DIR)
+	
+	if FileAccess.file_exists(file_path):
+		return {"error": CacheError.SUCESS, "data": file_path}
+	
+	var request := await HttpMan.request_file(url, file_name, true, CACHE_DIR)
+	
+	if request["error"] != HttpMan.NovaError.SUCESS:
+		print("Failed to download games, url: ", url, " error: ", request["error"])
+		return request
+	
+	return {"error": CacheError.SUCESS, "data": file_path}
 
 
 func get_tags(game_id: String, url: String) -> Dictionary:
-	var cache := await _get_cache(game_id, "tags.json", url)
-	if cache["error"] != CacheErrors.SUCESS:
-		return cache
+	var request := await _request_tags(game_id, url)
+	if request["error"] != CacheError.SUCESS:
+		return request
 	
-	var parse = parse_json(cache.get("data"))
+	var parse = parse_json(request.get("data"))
 	
 	return parse
+
+
+func _request_tags(game_id: String, url: String, file_name: String="tags.json") -> Dictionary:
+	var folder_path := CACHE_DIR + "/%s" % game_id
+	var file_path := folder_path + "/%s" % file_name
+	
+	if not DirAccess.dir_exists_absolute(folder_path):
+		DirAccess.make_dir_recursive_absolute(folder_path)
+	
+	if FileAccess.file_exists(file_path):
+		return { "error": CacheError.SUCESS, "data": file_path }
+	
+	
+	var request := await HttpMan.request_file(url, file_name, true, folder_path)
+	
+	if request["error"] != CacheError.SUCESS:
+		print("Failed to download tags for %s error: %s url: %s" % [game_id, request["error"], url])
+		return request
+	
+	return { "error": CacheError.SUCESS, "data": "Fuck" }
 
 
 func get_release(game_id: String, version: String) -> void:
@@ -52,22 +111,31 @@ func get_release(game_id: String, version: String) -> void:
 
 
 func parse_json(file_path: String) -> Dictionary:
+	#if not FileAccess.file_exists(file_path):
+		#print("File doesn't exist ", file_path)
+		#return {"error": CacheError.FILE_DOESNT_EXIST, "data": null}
+	#
+	#var file := FileAccess.open(file_path, FileAccess.READ)
+	#if FileAccess.get_open_error() != OK:
+		#print("Failed to read file %s got open error %s" % [file_path, FileAccess.get_open_error()])
+		#return {"error": CacheError.READ_FAIL, "data": null}
+	#
+	#var json := JSON.new()
+	#var err := json.parse_
+	#
+	#return {"error": CacheError.SUCESS, "data": {}}
 	if not FileAccess.file_exists(file_path):
 		push_warning(file_path, " doesn't exist!")
-		return { "error": CacheErrors.FILE_DOESNT_EXIST, "data": null }
+		return { "error": CacheError.FILE_DOESNT_EXIST, "data": null }
 	
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	if file == null:
 		push_warning("Failed to read file ", file_path, " got open error ", FileAccess.get_open_error())
 	
-	var json = JSON.new()
-	var err = json.parse(file.get_as_text())
-	if err != OK:
-		print("Failed to parse: ", err)
-		return {"error": CacheErrors.PARSE_ERROR, "data": null}
-	var response = json.get_data()
+	var parsed_file_data = JSON.parse_string(file.get_as_text())
+	print(parsed_file_data, " <- file")
 	
-	return {"error": CacheErrors.SUCESS, "data": response}
+	return {"error": CacheError.SUCESS, "data": parsed_file_data}
 
 
 func _get_cache(game_id: String, file_name: String, url:String="") -> Dictionary:
@@ -83,12 +151,12 @@ func _get_cache(game_id: String, file_name: String, url:String="") -> Dictionary
 	if not FileAccess.file_exists(file_path):
 		if url == "":
 			print("url is empty: ", game_id, " ", file_name)
-			return { "error": CacheErrors.NO_URL, "data": null }
+			return { "error": CacheError.NO_URL, "data": null }
 		else:
 			print("Request")
 			var request := await HttpMan.request_file(url, file_name, false, folder_path)
 			if request["error"] != HttpMan.NovaError.SUCESS:
 				push_warning("Failed to download ", file_path, " from url ", url)
-				return { "error": CacheErrors.DOWNLOAD_FAIL, "data": null }
+				return { "error": CacheError.DOWNLOAD_FAIL, "data": null }
 	
-	return { "error": CacheErrors.SUCESS, "data": file_path }
+	return { "error": CacheError.SUCESS, "data": file_path }
