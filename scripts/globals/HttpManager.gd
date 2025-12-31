@@ -11,6 +11,7 @@ enum NovaError {
 
 func _ready() -> void:
 	add_child(Http_requester)
+	Http_requester.use_threads = true
 
 ## [0] is NovaError, [1] is return
 func old_request(url: String, include_github_api: bool = true, download_to_file: bool=false, download_path: String="user://") -> Dictionary:

@@ -1,6 +1,7 @@
 extends Node
 
-var Remove_after_install
+var Remove_after_install := true
+
 func unzip_to_directory(path_to_zip: String, unzip_path: String="user://") -> void:
 	var reader := ZIPReader.new()
 	if not FileAccess.file_exists(path_to_zip):

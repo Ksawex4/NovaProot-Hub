@@ -9,6 +9,7 @@ var Http_requester := HTTPRequest.new()
 func _ready() -> void:
 	Http_requester.request_completed.connect(self._update_icon)
 	add_child(Http_requester)
+	Http_requester.use_threads = true
 
 
 func update_game(new_game_id: String) -> void:

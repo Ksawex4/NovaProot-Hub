@@ -29,9 +29,17 @@ func _on_versions_item_selected(index: int) -> void:
 	launch.update_state(Game_id, version)
 	var game = GamesMan.Games.get(Game_id)
 	Game_version = await GithubApiMan.get_repo_version(game.get("repo", ""), version)
+	os.clear()
+	var asset_keys: Array = Game_version.get("assets", {}).keys()
+	for asset in asset_keys:
+		os.add_item(asset)
+	var asset_index := asset_keys.find(OS.get_name(), -1)
+	if asset_index != -1:
+		os.select(asset_index)
 	changelog.text = Game_version.get("name", "fail") + "\n" + Game_version.get("body", "fail") 
 
 
 func _on_launch_pressed() -> void:
 	var version := versions.get_item_text(versions.selected)
+	var Os := os.get_item_text(os.selected)
 	launch.on_pressed(Game_id, version, Game_version, "Linux")
