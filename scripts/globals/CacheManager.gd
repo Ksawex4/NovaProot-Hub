@@ -106,8 +106,8 @@ func _request_tags(game_id: String, url: String, file_name: String="tags.json") 
 	return { "error": CacheError.SUCESS, "data": request["data"] }
 
 
-func get_release(game_id: String, version: String) -> void:
-	var request := await _request_release(game_id, version)
+func get_release(game_id: String, version: String, repo: String) -> void:
+	var request := await _request_release(game_id, version, repo)
 
 
 func _request_release(game_id: String, version: String, repo: String) -> Dictionary:
