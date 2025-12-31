@@ -96,6 +96,9 @@ func request_file(url: String, file_name: String, include_github_api: bool = fal
 		DirAccess.make_dir_recursive_absolute(download_file_path)
 	var file_save_path = download_file_path + "/" +file_name
 	
+	if Http_requester.get_http_client_status() != HTTPClient.Status.STATUS_DISCONNECTED:
+		await Http_requester.request_completed
+	
 	print("request_file url: ",url)
 	Http_requester.download_file = download_file_path + "/" + file_name
 	Http_requester.request(url, headers)

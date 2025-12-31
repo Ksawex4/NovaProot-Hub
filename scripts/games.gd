@@ -6,6 +6,7 @@ const GAME_ENTRY = preload("uid://dfkjh6coao8y6")
 
 func _ready() -> void:
 	GamesMan.UpdateGames.connect(self._update_list)
+	_update_list()
 
 
 func _update_list() -> void:

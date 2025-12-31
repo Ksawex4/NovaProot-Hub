@@ -16,7 +16,7 @@ func update_shown_game(game_id: String, game_icon: Texture2D) -> void:
 	Game_id = game_id
 	if game:
 		game_name.text = game.get("name", "Nonexistent Name")
-		var game_versions := await GithubApiMan.get_repo_tags(game.get("repo", ""))
+		var game_versions := await GithubApiMan.get_repo_tags(game.get("repo", ""), game_id)
 		for version in game_versions:
 			versions.add_item(version)
 		_on_versions_item_selected(0)
@@ -26,20 +26,23 @@ func update_shown_game(game_id: String, game_icon: Texture2D) -> void:
 
 func _on_versions_item_selected(index: int) -> void:
 	var version := versions.get_item_text(index)
-	launch.update_state(Game_id, version)
 	var game = GamesMan.Games.get(Game_id)
 	Game_version = await GithubApiMan.get_repo_version(game.get("repo", ""), version)
 	os.clear()
 	var asset_keys: Array = Game_version.get("assets", {}).keys()
 	for asset in asset_keys:
 		os.add_item(asset)
-	var asset_index := asset_keys.find(OS.get_name(), -1)
+	var asset_index := asset_keys.find(OS.get_name(), 0)
 	if asset_index != -1:
 		os.select(asset_index)
+	launch.update_state(Game_id, version, os.get_item_text(os.selected))
 	changelog.text = Game_version.get("name", "fail") + "\n" + Game_version.get("body", "fail") 
 
+
+func _on_os_item_selected(index: int) -> void:
+	launch.update_state(Game_id, "", os.get_item_text(index))
 
 func _on_launch_pressed() -> void:
 	var version := versions.get_item_text(versions.selected)
 	var Os := os.get_item_text(os.selected)
-	launch.on_pressed(Game_id, version, Game_version, "Linux")
+	launch.on_pressed(Game_id, version, Game_version, Os)

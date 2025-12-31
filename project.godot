@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 HttpMan="*res://scripts/globals/HttpManager.gd"
+CacheMan="*res://scripts/globals/CacheManager.gd"
 SaveMan="*res://scripts/globals/SaveManager.gd"
 FileMan="*res://scripts/globals/FileManager.gd"
 ZipMan="*res://scripts/globals/ZipManager.gd"

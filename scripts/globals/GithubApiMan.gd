@@ -11,9 +11,9 @@ func _ready() -> void:
 
 
 ## repository has to be Author/Repository for example "Ksawex4/Block-Jumper
-func get_repo_tags(repository: String) -> Array:
+func get_repo_tags(repository: String, game_id: String) -> Array:
 	var url := TAGS_URL.replace("REPO", repository)
-	var response := await HttpMan.request(url, true)
+	var response := await CacheMan.get_tags(game_id, url)
 	
 	if response["error"] != HttpMan.NovaError.SUCESS:
 		print("request_file failed ", response["error"])
@@ -49,7 +49,6 @@ func get_repo_version(repository: String, version: String) -> Dictionary:
 			var asset_name: String = asset.get("name")
 			asset_name = asset_name.to_lower()
 			var asset_url: String = asset.get("browser_download_url")
-			print(asset_url)
 			if asset_name.ends_with(".apk"):
 				game_downloads.set("Android", asset_url)
 				continue

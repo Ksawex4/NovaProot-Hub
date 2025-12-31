@@ -7,19 +7,35 @@ signal UpdateGames()
 
 
 func _ready() -> void:
-	var response = await HttpMan.request("http://localhost:12345/games.json", true)
+	print("hi")
+	var response = await CacheMan.get_games()
+	print("got response")
 	var err = response["error"]
 	if err != OK:
-		print("error with http request: ", err)
+		print("error with CacheMan request: ", err)
 	
 	if response["data"] is Dictionary:
 		Games = response["data"]
-		SaveMan.save_file("games.json", Games)
+		print("response set as Games")
 		UpdateGames.emit()
 	else:
-		load_from_cache()
+		print("failed to get games.json from cache and download")
 
 
-func load_from_cache() -> void:
-	Games = SaveMan.get_data_from_file("games.json")
-	UpdateGames.emit()
+func get_game_executable_path(game_id: String, version: String, os: String) -> String:
+	var path = "user://games/%s/%s-%s" % [game_id, version, os]
+	path = ProjectSettings.globalize_path(path) + "/"
+	var dir := DirAccess.open(path)
+	var files := dir.get_files()
+	for file in files:
+		var file_lower := file.to_lower()
+		if os == "Linux":
+			if file_lower.ends_with("x86_64") or file_lower.ends_with(".appimage"):
+				path += file
+				break
+		elif os == "Windows":
+			if file_lower.ends_with(".exe"):
+				path += file
+				break
+	print(path)
+	return path
