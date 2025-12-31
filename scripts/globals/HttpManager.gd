@@ -5,75 +5,34 @@ enum NovaError {
 	WRONG_RESPONSE,
 	PARSE_ERROR,
 	DOWNLOAD_FAIL,
-	STATUS_NOT_DISCONNECTED,
 }
-@onready var Http_requester := HTTPRequest.new()
-
-func _ready() -> void:
-	add_child(Http_requester)
-	Http_requester.use_threads = true
-
-## [0] is NovaError, [1] is return
-func old_request(url: String, include_github_api: bool = true, download_to_file: bool=false, download_path: String="user://") -> Dictionary:
-	# Headers
-	var headers := []
-	if include_github_api:
-		headers = [
-			"Authorization: %s" % GithubApiMan.Api_key, 
-			"User-Agent: NovaProot-Hub",
-		]
-	
-	# Checking if download path exists + file_path variable
-	if not DirAccess.dir_exists_absolute(download_path):
-		DirAccess.make_dir_recursive_absolute(download_path)
-	var download_file_path := download_path + url.get_file()
-	
-	# reseting download_file path
-	Http_requester.download_file = ""
-	if download_file_path:
-		Http_requester.download_file = download_file_path
-	
-	Http_requester.request(url, headers)
-	
-	var result = await Http_requester.request_completed
-	if result[0] != OK or result[1] != 200:
-		print("Failed, result: %s,result_code: %s" % [result[0], result[1]])
-		return {"error": NovaError.WRONG_RESPONSE, "data": null}
-	
-	
-	if download_to_file:
-		return {"error": NovaError.SUCESS, "data": download_file_path}
-	
-	# parsing
-	var json = JSON.new()
-	var err = json.parse(result[3].get_string_from_utf8())
-	if err != OK:
-		print("Failed to parse: ", err)
-		return {"error": NovaError.PARSE_ERROR, "data": null}
-	var response = json.get_data()
-	
-	return {"error": NovaError.SUCESS, "data": response}
 
 
 func request(url: String, include_github_api: bool = false) -> Dictionary:
-	if Http_requester.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
-		return {"error": NovaError.STATUS_NOT_DISCONNECTED, "data": null}
+	# Adding the HTTPRequest node and setting it up
+	var Http_requester := HTTPRequest.new()
+	add_child(Http_requester)
+	Http_requester.use_threads = true
+	Http_requester.download_file = ""
+	
 	var headers := PackedStringArray([])
 	if include_github_api:
 		headers = PackedStringArray([
 		"Accept: application/vnd.github.v3+json",
 		"Authorization: token " + GithubApiMan.Api_key
-	])
+		])
 	
-	print("request url: ",url)
-	Http_requester.download_file = ""
+	# requesting and freeing node after request
+	print("request url: ", url)
 	Http_requester.request(url, headers)
 	var result = await Http_requester.request_completed
+	Http_requester.queue_free()
 	
 	if result[0] != OK or result[1] != 200:
-		print("Failed, result: %s,result_code: %s" % [result[0], result[1]])
+		print("Failed, result: %s, result_code: %s" % [result[0], result[1]])
 		return {"error": NovaError.WRONG_RESPONSE, "data": null}
 	
+	# Parsing
 	var json = JSON.new()
 	var err = json.parse(result[3].get_string_from_utf8())
 	if err != OK:
@@ -85,6 +44,12 @@ func request(url: String, include_github_api: bool = false) -> Dictionary:
 
 
 func request_file(url: String, file_name: String, include_github_api: bool = false, download_file_path: String="user://downloads") -> Dictionary:
+	# Adding the HTTPRequest node
+	var Http_requester := HTTPRequest.new()
+	add_child(Http_requester)
+	Http_requester.use_threads = true
+	Http_requester.download_file = download_file_path + "/" + file_name
+	
 	var headers := PackedStringArray([])
 	if include_github_api:
 		headers = PackedStringArray([
@@ -92,25 +57,25 @@ func request_file(url: String, file_name: String, include_github_api: bool = fal
 		"Authorization: token " + GithubApiMan.Api_key
 	])
 	
+	# Creating directory if it doesn't exist
 	if not DirAccess.dir_exists_absolute(download_file_path):
 		DirAccess.make_dir_recursive_absolute(download_file_path)
 	var file_save_path = download_file_path + "/" +file_name
 	
-	if Http_requester.get_http_client_status() != HTTPClient.Status.STATUS_DISCONNECTED:
-		await Http_requester.request_completed
-	
-	print("request_file url: ",url)
-	Http_requester.download_file = download_file_path + "/" + file_name
+	# requesting and freeing node after request
+	print("request_file url: ", url)
 	Http_requester.request(url, headers)
 	var result = await Http_requester.request_completed
-	
+	Http_requester.queue_free()
 	
 	
 	if result[0] != OK or result[1] != 200:
 		print("Failed, result: %s,result_code: %s" % [result[0], result[1]])
 		return {"error": NovaError.WRONG_RESPONSE, "data": null}
 	
+	# Checking if file exists after request
 	if not FileAccess.file_exists(file_save_path):
 		print("Downloaded file, missing after write: ", file_save_path)
+		return {"error": NovaError.DOWNLOAD_FAIL, "data": null}
 	
 	return {"error": NovaError.SUCESS, "data": file_save_path}
