@@ -103,11 +103,31 @@ func _request_tags(game_id: String, url: String, file_name: String="tags.json") 
 		print("Failed to download tags for %s error: %s url: %s" % [game_id, request["error"], url])
 		return request
 	
-	return { "error": CacheError.SUCESS, "data": "Fuck" }
+	return { "error": CacheError.SUCESS, "data": request["data"] }
 
 
 func get_release(game_id: String, version: String) -> void:
-	pass
+	var request := await _request_release(game_id, version)
+
+
+func _request_release(game_id: String, version: String, repo: String) -> Dictionary:
+	var folder_path := CACHE_DIR + "/%s" % game_id
+	var file_path := folder_path + "/%s.json" % version
+	
+	if not DirAccess.dir_exists_absolute(folder_path):
+		DirAccess.make_dir_recursive_absolute(folder_path)
+	
+	if FileAccess.file_exists(file_path):
+		return { "error": CacheError.SUCESS, "data": file_path }
+	
+	
+	var request := await GithubApiMan.get_repo_version(repo, version)
+	
+	if request["error"] != CacheError.SUCESS:
+		print("Failed to download tags for %s error: %s url: %s" % [game_id, request["error"], repo])
+		return request
+	
+	return { "error": CacheError.SUCESS, "data": request["data"] }
 
 
 func parse_json(file_path: String) -> Dictionary:
