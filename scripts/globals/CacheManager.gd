@@ -1,6 +1,7 @@
 extends Node
 
 const CACHE_DIR = "user://cache"
+var file_refresh_age := 3600
 enum CacheError {
 	SUCESS,
 	NO_URL,
@@ -10,10 +11,78 @@ enum CacheError {
 	READ_FAIL,
 }
 
-func get_icon(game_id: String, file_name: String="icon.png", url: String="") -> Texture2D:
+var RefreshCacheTimer := Timer.new()
+signal UpdateIcon(game_id: String, icon: Texture2D)
+
+func _ready() -> void:
+	add_child(RefreshCacheTimer)
+	_cache_refresh_check.call_deferred()
+	RefreshCacheTimer.start(300)
+	RefreshCacheTimer.timeout.connect(_cache_refresh_check)
+
+
+func _cache_refresh_check() -> void:
+	print("rechaching")
+	
+	recache_files()
+	
+	print("rechache finished")
+
+
+func recache_files(force_recache: bool=false) -> void:
+	var files_to_refresh := _get_all_files(CACHE_DIR)
+	for file_path in files_to_refresh:
+		var file_age: int = round(Time.get_unix_time_from_system() - FileAccess.get_modified_time(file_path))
+		#print(file_path, " date_time: ", Time.get_datetime_dict_from_unix_time(file_age), " unix: ", int(file_age))
+		if file_age > file_refresh_age or force_recache:
+			var file_name := file_path.get_file()
+			var game_id := file_path.replace(CACHE_DIR + "/", "").split("/")[0]
+			match file_name:
+				"games.json":
+					print(file_path, " age: %s" % file_age) # This works
+					var new_games := await get_games(true)
+					if new_games["error"] != OK:
+						print("Failed to recache games")
+						continue
+					GamesMan.Games = new_games["data"]
+				"tags.json":
+					print(file_path, " age: %s" % file_age)
+					await GithubApiMan.get_repo_tags(GamesMan.Games[game_id]["repo"], game_id, true)
+				"icon.png":
+					print(file_path, " age: %s" % file_age) # this works
+					var new_icon := await get_icon(game_id, "icon.png", "", true)
+					UpdateIcon.emit(game_id, new_icon)
+				_:
+					print(file_path, " age: %s" % file_age)
+					
+					if file_name.begins_with("v"):
+						GithubApiMan.get_repo_version(GamesMan.Games[game_id]["repo"], game_id, file_name.get_basename(), true)
+					else:
+						print("Don't know what to do with this cache file: ", file_path)
+
+
+func _get_all_files(path: String, files: PackedStringArray = PackedStringArray([])) -> PackedStringArray:
+	var dir := DirAccess.open(path)
+	if DirAccess.get_open_error() == OK:
+		dir.list_dir_begin()
+		var file_name := dir.get_next()
+		
+		while file_name != "":
+			if dir.current_is_dir():
+				files = _get_all_files(dir.get_current_dir() + "/%s" % file_name, files)
+			else:
+				files.append(dir.get_current_dir()+ "/%s" % file_name)
+			file_name = dir.get_next()
+	else:
+		print("Failed to open dir at ", path)
+	
+	return files
+
+
+func get_icon(game_id: String, file_name: String="icon.png", url: String="", recache: bool=false) -> Texture2D:
 	if url == "":
 		url = GamesMan.Games.get(game_id)["icon"]
-	var request := await _request_icon(game_id, file_name, url)
+	var request := await _request_icon(game_id, file_name, url, recache)
 	if request["error"] != CacheError.SUCESS:
 		push_warning("Failed to get icon %s" % [url])
 	
@@ -29,14 +98,14 @@ func get_icon(game_id: String, file_name: String="icon.png", url: String="") -> 
 	return load("res://icon.svg")
 
 
-func _request_icon(game_id: String, file_name: String, url: String) -> Dictionary:
+func _request_icon(game_id: String, file_name: String, url: String, recache: bool=false) -> Dictionary:
 	var folder_path := CACHE_DIR + "/%s" % game_id
 	var file_path := folder_path + "/%s" % file_name
 	
 	if not DirAccess.dir_exists_absolute(folder_path):
 		DirAccess.make_dir_recursive_absolute(folder_path)
 	
-	if FileAccess.file_exists(file_path):
+	if FileAccess.file_exists(file_path) and not recache:
 		return {"error": CacheError.SUCESS, "data": file_path}
 	
 	var request := await HttpMan.request_file(url, file_name, false, folder_path)
@@ -48,9 +117,9 @@ func _request_icon(game_id: String, file_name: String, url: String) -> Dictionar
 	return { "error": CacheError.SUCESS, "data": file_path }
 
 
-func get_games() -> Dictionary:
+func get_games(recache: bool=false) -> Dictionary:
 	var url := "http://localhost:12345/games.json"
-	var request := await _request_games("games.json", url) # url will be https://github.com/Ksawex4/NovaProot-Hub/raw/refs/heads/main/data/games.json later
+	var request := await _request_games("games.json", url, recache) # url will be https://github.com/Ksawex4/NovaProot-Hub/raw/refs/heads/main/data/games.json later
 	if request["error"] != CacheError.SUCESS:
 		print("Failed to get games, %s" % url)
 		return request
@@ -58,13 +127,13 @@ func get_games() -> Dictionary:
 	return parse
 
 
-func _request_games(file_name: String, url: String) -> Dictionary:
+func _request_games(file_name: String, url: String, recache: bool=false) -> Dictionary:
 	var file_path := CACHE_DIR + "/%s" % file_name
 	
 	if not DirAccess.dir_exists_absolute(CACHE_DIR):
 		DirAccess.make_dir_recursive_absolute(CACHE_DIR)
 	
-	if FileAccess.file_exists(file_path):
+	if FileAccess.file_exists(file_path) and not recache:
 		return {"error": CacheError.SUCESS, "data": file_path}
 	
 	var request := await HttpMan.request_file(url, file_name, true, CACHE_DIR)
@@ -76,8 +145,8 @@ func _request_games(file_name: String, url: String) -> Dictionary:
 	return {"error": CacheError.SUCESS, "data": file_path}
 
 
-func get_tags(game_id: String, url: String) -> Dictionary:
-	var request := await _request_tags(game_id, url)
+func get_tags(game_id: String, url: String, recache: bool=false) -> Dictionary:
+	var request := await _request_tags(game_id, url, "tags.json", recache)
 	if request["error"] != CacheError.SUCESS:
 		return request
 	
@@ -86,14 +155,14 @@ func get_tags(game_id: String, url: String) -> Dictionary:
 	return parse
 
 
-func _request_tags(game_id: String, url: String, file_name: String="tags.json") -> Dictionary:
+func _request_tags(game_id: String, url: String, file_name: String="tags.json", recache: bool=false) -> Dictionary:
 	var folder_path := CACHE_DIR + "/%s" % game_id
 	var file_path := folder_path + "/%s" % file_name
 	
 	if not DirAccess.dir_exists_absolute(folder_path):
 		DirAccess.make_dir_recursive_absolute(folder_path)
 	
-	if FileAccess.file_exists(file_path):
+	if FileAccess.file_exists(file_path) and not recache:
 		return { "error": CacheError.SUCESS, "data": file_path }
 	
 	
@@ -106,15 +175,16 @@ func _request_tags(game_id: String, url: String, file_name: String="tags.json") 
 	return { "error": CacheError.SUCESS, "data": request["data"] }
 
 
-func get_release(game_id: String, version: String, url: String) -> Dictionary:
-	var request := await _request_release(game_id, version, url)
+func get_release(game_id: String, version: String, url: String, recache: bool=false) -> Dictionary:
+	var request := await _request_release(game_id, version, url, recache)
 	if request["error"] != CacheError.SUCESS:
 		return {"error": request["error"], "data": {}}
 	var parse := parse_json(request["data"])
 	
 	return {"error": CacheError.SUCESS, "data": parse}
 
-func _request_release(game_id: String, version: String, url: String) -> Dictionary:
+
+func _request_release(game_id: String, version: String, url: String, recache: bool=false) -> Dictionary:
 	var folder_path := CACHE_DIR + "/%s" % game_id
 	var file_name := "%s.json" % version
 	var file_path := folder_path + "/%s" % file_name
@@ -122,7 +192,7 @@ func _request_release(game_id: String, version: String, url: String) -> Dictiona
 	if not DirAccess.dir_exists_absolute(folder_path):
 		DirAccess.make_dir_recursive_absolute(folder_path)
 	
-	if FileAccess.file_exists(file_path):
+	if FileAccess.file_exists(file_path) and not recache:
 		return { "error": CacheError.SUCESS, "data": file_path }
 	
 	
@@ -156,7 +226,6 @@ func _request_release(game_id: String, version: String, url: String) -> Dictiona
 			continue
 	data.set("assets", game_downloads)
 	request["data"] = data
-	print("data: ", data)
 	
 	var file2 := FileAccess.open(file_path, FileAccess.WRITE)
 	file2.store_string(JSON.stringify(request["data"]))
@@ -166,19 +235,6 @@ func _request_release(game_id: String, version: String, url: String) -> Dictiona
 
 
 func parse_json(file_path: String) -> Dictionary:
-	#if not FileAccess.file_exists(file_path):
-		#print("File doesn't exist ", file_path)
-		#return {"error": CacheError.FILE_DOESNT_EXIST, "data": null}
-	#
-	#var file := FileAccess.open(file_path, FileAccess.READ)
-	#if FileAccess.get_open_error() != OK:
-		#print("Failed to read file %s got open error %s" % [file_path, FileAccess.get_open_error()])
-		#return {"error": CacheError.READ_FAIL, "data": null}
-	#
-	#var json := JSON.new()
-	#var err := json.parse_
-	#
-	#return {"error": CacheError.SUCESS, "data": {}}
 	if not FileAccess.file_exists(file_path):
 		push_warning(file_path, " doesn't exist!")
 		return { "error": CacheError.FILE_DOESNT_EXIST, "data": null }
@@ -188,30 +244,5 @@ func parse_json(file_path: String) -> Dictionary:
 		push_warning("Failed to read file ", file_path, " got open error ", FileAccess.get_open_error())
 	
 	var parsed_file_data = JSON.parse_string(file.get_as_text())
-	#print(parsed_file_data, " <- file")
 	
 	return {"error": CacheError.SUCESS, "data": parsed_file_data}
-
-
-#func _get_cache(game_id: String, file_name: String, url:String="") -> Dictionary:
-	#var folder_path := CACHE_DIR
-	#if game_id != "":
-		#folder_path += "/%s" % [game_id]
-	#var file_path := folder_path + "/%s" % file_name
-	#
-	#print("Dir")
-	#if not DirAccess.dir_exists_absolute(folder_path):
-		#DirAccess.make_dir_recursive_absolute(folder_path)
-	#print("file")
-	#if not FileAccess.file_exists(file_path):
-		#if url == "":
-			#print("url is empty: ", game_id, " ", file_name)
-			#return { "error": CacheError.NO_URL, "data": null }
-		#else:
-			#print("Request")
-			#var request := await HttpMan.request_file(url, file_name, false, folder_path)
-			#if request["error"] != HttpMan.NovaError.SUCESS:
-				#push_warning("Failed to download ", file_path, " from url ", url)
-				#return { "error": CacheError.DOWNLOAD_FAIL, "data": null }
-	#
-	#return { "error": CacheError.SUCESS, "data": file_path }

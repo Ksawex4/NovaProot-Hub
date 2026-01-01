@@ -4,6 +4,10 @@ extends Button
 @onready var Parent: VBoxContainer = $'..'
 var Game_id: String = ""
 
+func _ready() -> void:
+	CacheMan.UpdateIcon.connect(_update_icon)
+
+
 func update_game(new_game_id: String) -> void:
 	Game_id = new_game_id
 	if Game_id:
@@ -18,3 +22,8 @@ func update_game(new_game_id: String) -> void:
 
 func _on_pressed() -> void:
 	Parent.game_page.update_shown_game(Game_id, icon)
+
+
+func _update_icon(game_id: String, new_icon: Texture2D) -> void:
+	if Game_id == game_id:
+		$Icon.texture = new_icon

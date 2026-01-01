@@ -7,8 +7,6 @@ signal UpdateGames()
 
 
 func _ready() -> void:
-	#var bob: int = Time.get_unix_time_from_system() - FileAccess.get_modified_time("user://cache/games.json")
-	#print("Bob age is ", Time.get_datetime_dict_from_unix_time(bob), " mod_time: ", Time.get_datetime_dict_from_unix_time(FileAccess.get_modified_time("user://cache/games.json")))
 	var response = await CacheMan.get_games()
 	
 	var err = response["error"]
