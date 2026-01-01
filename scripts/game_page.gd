@@ -71,3 +71,10 @@ func _update_version(game_id: String, version: String) -> void:
 	if game_id == Game_id and version == versions.get_item_text(versions.selected):
 		Game_version = await GithubApiMan.get_repo_version(GamesMan.Games.get("game", ""), Game_id, version)
 		changelog.text = Game_version.get("name", "fail") + "\n" + Game_version.get("body", "fail")
+
+
+func _on_open_dir_pressed() -> void:
+	var directory := FileMan.get_version_directory(Game_id, versions.get_item_text(versions.selected), os.get_item_text(os.selected))
+	directory = ProjectSettings.globalize_path(directory)
+	print(directory)
+	OS.shell_open(directory)

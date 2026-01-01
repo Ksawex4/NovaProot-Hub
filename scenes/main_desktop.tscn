@@ -78,6 +78,10 @@ layout_mode = 2
 text = "Wait"
 script = ExtResource("6_rd4of")
 
+[node name="OpenDir" type="Button" parent="TabContainer/Games/Games/GamePage/Middle"]
+layout_mode = 2
+text = "Open Dir"
+
 [node name="Changelog" type="RichTextLabel" parent="TabContainer/Games/Games/GamePage"]
 custom_minimum_size = Vector2(0, 320)
 layout_mode = 2
@@ -147,6 +151,7 @@ text = "Clear All Cache"
 [connection signal="item_selected" from="TabContainer/Games/Games/GamePage/Middle/Versions" to="TabContainer/Games/Games/GamePage" method="_on_versions_item_selected"]
 [connection signal="item_selected" from="TabContainer/Games/Games/GamePage/Middle/Os" to="TabContainer/Games/Games/GamePage" method="_on_os_item_selected"]
 [connection signal="pressed" from="TabContainer/Games/Games/GamePage/Middle/Uninstall" to="TabContainer/Games/Games/GamePage/Middle/Uninstall" method="_on_pressed"]
+[connection signal="pressed" from="TabContainer/Games/Games/GamePage/Middle/OpenDir" to="TabContainer/Games/Games/GamePage" method="_on_open_dir_pressed"]
 [connection signal="pressed" from="TabContainer/Games/RefreshButton" to="TabContainer/Games/RefreshButton" method="_on_pressed"]
 [connection signal="text_submitted" from="TabContainer/Settings/GithubApiKey" to="TabContainer/Settings" method="_on_github_api_key_text_submitted"]
 [connection signal="toggled" from="TabContainer/Settings/RemoveAfterInstall" to="TabContainer/Settings" method="_on_remove_after_install_toggled"]

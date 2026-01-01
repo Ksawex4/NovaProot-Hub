@@ -47,3 +47,10 @@ func remove_game(game_id: String, version: String, os: String) -> void:
 		for file in files:
 			DirAccess.remove_absolute(file)
 		DirAccess.remove_absolute(install_path)
+
+
+func get_version_directory(game_id: String, version: String, os: String) -> String:
+	var path := "user://games/%s/%s-%s" % [game_id, version, os]
+	if DirAccess.dir_exists_absolute(path):
+		return path
+	return "user://"
