@@ -27,7 +27,8 @@ func update_shown_game(game_id: String, game_icon: Texture2D) -> void:
 func _on_versions_item_selected(index: int) -> void:
 	var version := versions.get_item_text(index)
 	var game = GamesMan.Games.get(Game_id)
-	Game_version = await GithubApiMan.get_repo_version(game.get("repo", ""), version)
+	var requestere := await GithubApiMan.get_repo_version(game.get("repo", ""), Game_id, version)
+	Game_version = requestere["data"]["data"]
 	os.clear()
 	var asset_keys: Array = Game_version.get("assets", {}).keys()
 	for asset in asset_keys:

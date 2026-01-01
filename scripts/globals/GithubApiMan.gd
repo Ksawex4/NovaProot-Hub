@@ -30,38 +30,42 @@ func get_repo_tags(repository: String, game_id: String) -> Array:
 	return tags
 
 
-func get_repo_version(repository: String, version: String) -> Dictionary:
+func get_repo_version(repository: String, game_id: String, version: String) -> Dictionary:
 	var url := RELEASE_URL.replace("REPO", repository).replace("TAG", version)
-	var responsee := await HttpMan.request(url, true)
+	#var response := await HttpMan.request(url, true)
+	var response := await CacheMan.get_release(game_id, version, url)
 	
-	if responsee["error"] != HttpMan.NovaError.SUCESS:
-		print("request_file failed ", responsee["error"])
-		return {}
+	if response["error"] != HttpMan.NovaError.SUCESS:
+		print("request_file failed ", response["error"])
 	
-	var response = responsee["data"] 
+	return response
 	
-	if response is Dictionary:
-		var data: Dictionary[String, Variant] = {}
-		data.set("name", response.get("name"))
-		data.set("body", response.get("body"))
-		var game_downloads: Dictionary[String, String] = {}
-		for asset in response.get("assets"):
-			var asset_name: String = asset.get("name")
-			asset_name = asset_name.to_lower()
-			var asset_url: String = asset.get("browser_download_url")
-			if asset_name.ends_with(".apk"):
-				game_downloads.set("Android", asset_url)
-				continue
-			if asset_name.contains("linux"):
-				game_downloads.set("Linux", asset_url)
-				continue
-			if asset_name.contains("windows"):
-				game_downloads.set("Windows", asset_url)
-				continue
-		data.set("assets", game_downloads)
-		
-		return data
-	return {}
+	
+	
+	#var response = responsee["data"] 
+	
+	#if response is Dictionary:
+		#var data: Dictionary[String, Variant] = {}
+		#data.set("name", response.get("name"))
+		#data.set("body", response.get("body"))
+		#var game_downloads: Dictionary[String, String] = {}
+		#for asset in response.get("assets"):
+			#var asset_name: String = asset.get("name")
+			#asset_name = asset_name.to_lower()
+			#var asset_url: String = asset.get("browser_download_url")
+			#if asset_name.ends_with(".apk"):
+				#game_downloads.set("Android", asset_url)
+				#continue
+			#if asset_name.contains("linux"):
+				#game_downloads.set("Linux", asset_url)
+				#continue
+			#if asset_name.contains("windows"):
+				#game_downloads.set("Windows", asset_url)
+				#continue
+		#data.set("assets", game_downloads)
+		#
+		#return data
+	#return response
 
 
 ## return an empty string if failed, else returns the path of the downloaded file for the game
