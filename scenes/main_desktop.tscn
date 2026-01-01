@@ -121,6 +121,28 @@ offset_right = 273.0
 offset_bottom = 87.0
 text = "Remove .zip/.apk after install"
 
+[node name="ShowApiKey" type="CheckButton" parent="TabContainer/Settings"]
+layout_mode = 0
+offset_top = 88.0
+offset_right = 152.0
+offset_bottom = 119.0
+text = "Show API Key"
+
+[node name="ApiKey" type="Label" parent="TabContainer/Settings/ShowApiKey"]
+layout_mode = 0
+offset_top = 32.0
+offset_right = 1153.0
+offset_bottom = 81.0
+autowrap_mode = 1
+
+[node name="ClearCache" type="Button" parent="TabContainer/Settings"]
+layout_mode = 0
+offset_left = 306.0
+offset_top = 52.0
+offset_right = 474.0
+offset_bottom = 99.0
+text = "Clear All Cache"
+
 [connection signal="pressed" from="TabContainer/Games/Games/GamePage/Middle/Launch" to="TabContainer/Games/Games/GamePage" method="_on_launch_pressed"]
 [connection signal="item_selected" from="TabContainer/Games/Games/GamePage/Middle/Versions" to="TabContainer/Games/Games/GamePage" method="_on_versions_item_selected"]
 [connection signal="item_selected" from="TabContainer/Games/Games/GamePage/Middle/Os" to="TabContainer/Games/Games/GamePage" method="_on_os_item_selected"]
@@ -128,3 +150,5 @@ text = "Remove .zip/.apk after install"
 [connection signal="pressed" from="TabContainer/Games/RefreshButton" to="TabContainer/Games/RefreshButton" method="_on_pressed"]
 [connection signal="text_submitted" from="TabContainer/Settings/GithubApiKey" to="TabContainer/Settings" method="_on_github_api_key_text_submitted"]
 [connection signal="toggled" from="TabContainer/Settings/RemoveAfterInstall" to="TabContainer/Settings" method="_on_remove_after_install_toggled"]
+[connection signal="toggled" from="TabContainer/Settings/ShowApiKey" to="TabContainer/Settings" method="_on_show_api_key_toggled"]
+[connection signal="pressed" from="TabContainer/Settings/ClearCache" to="TabContainer/Settings" method="_on_clear_cache_pressed"]

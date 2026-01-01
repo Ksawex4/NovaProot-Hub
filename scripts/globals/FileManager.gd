@@ -43,7 +43,6 @@ func download_game(game_id: String, version: String, game_release: Dictionary, o
 func remove_game(game_id: String, version: String, os: String) -> void:
 	var install_path := "user://games/%s/%s-%s" % [game_id, version, os]
 	if DirAccess.dir_exists_absolute(install_path):
-		
 		var files := CacheMan.get_all_files(install_path)
 		for file in files:
 			DirAccess.remove_absolute(file)

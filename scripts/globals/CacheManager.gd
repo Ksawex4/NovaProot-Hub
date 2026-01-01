@@ -24,11 +24,22 @@ func _ready() -> void:
 	RefreshCacheTimer.timeout.connect(_cache_refresh_check)
 
 
+func clear_all_cache() -> void:
+	if DirAccess.dir_exists_absolute(CACHE_DIR):
+		var files := get_all_files(CACHE_DIR)
+		var directories := get_all_files(CACHE_DIR, PackedStringArray([]), true)
+		for file in files:
+			DirAccess.remove_absolute(file)
+		for dir in directories:
+			DirAccess.remove_absolute(dir)
+		
+		DirAccess.remove_absolute(CACHE_DIR)
+
+
 func _cache_refresh_check() -> void:
+	RefreshCacheTimer.start(300)
 	print("rechaching")
-	
 	recache_files()
-	
 	print("rechache finished")
 
 
@@ -67,17 +78,18 @@ func recache_files(force_recache: bool=false) -> void:
 						print("Don't know what to do with this cache file: ", file_path)
 
 
-func get_all_files(path: String, files: PackedStringArray = PackedStringArray([])) -> PackedStringArray:
+func get_all_files(path: String, files: PackedStringArray = PackedStringArray([]), get_dirs: bool=false) -> PackedStringArray:
 	var dir := DirAccess.open(path)
 	if DirAccess.get_open_error() == OK:
 		dir.list_dir_begin()
 		var file_name := dir.get_next()
 		
 		while file_name != "":
-			if dir.current_is_dir():
+			if dir.current_is_dir() and not get_dirs:
 				files = get_all_files(dir.get_current_dir() + "/%s" % file_name, files)
 			else:
-				files.append(dir.get_current_dir()+ "/%s" % file_name)
+				if get_dirs and dir.current_is_dir() or not get_dirs and not dir.current_is_dir():
+					files.append(dir.get_current_dir()+ "/%s" % file_name)
 			file_name = dir.get_next()
 	else:
 		print("Failed to open dir at ", path)
