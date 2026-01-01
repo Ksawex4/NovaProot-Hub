@@ -33,7 +33,7 @@ func _cache_refresh_check() -> void:
 
 
 func recache_files(force_recache: bool=false) -> void:
-	var files_to_refresh := _get_all_files(CACHE_DIR)
+	var files_to_refresh := get_all_files(CACHE_DIR)
 	for file_path in files_to_refresh:
 		var file_age: int = round(Time.get_unix_time_from_system() - FileAccess.get_modified_time(file_path))
 		#print(file_path, " date_time: ", Time.get_datetime_dict_from_unix_time(file_age), " unix: ", int(file_age))
@@ -67,7 +67,7 @@ func recache_files(force_recache: bool=false) -> void:
 						print("Don't know what to do with this cache file: ", file_path)
 
 
-func _get_all_files(path: String, files: PackedStringArray = PackedStringArray([])) -> PackedStringArray:
+func get_all_files(path: String, files: PackedStringArray = PackedStringArray([])) -> PackedStringArray:
 	var dir := DirAccess.open(path)
 	if DirAccess.get_open_error() == OK:
 		dir.list_dir_begin()
@@ -75,7 +75,7 @@ func _get_all_files(path: String, files: PackedStringArray = PackedStringArray([
 		
 		while file_name != "":
 			if dir.current_is_dir():
-				files = _get_all_files(dir.get_current_dir() + "/%s" % file_name, files)
+				files = get_all_files(dir.get_current_dir() + "/%s" % file_name, files)
 			else:
 				files.append(dir.get_current_dir()+ "/%s" % file_name)
 			file_name = dir.get_next()
