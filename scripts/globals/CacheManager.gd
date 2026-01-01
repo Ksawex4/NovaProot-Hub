@@ -263,5 +263,8 @@ func parse_json(file_path: String) -> Dictionary:
 		push_warning("Failed to read file ", file_path, " got open error ", FileAccess.get_open_error())
 	
 	var parsed_file_data = JSON.parse_string(file.get_as_text())
+	if parsed_file_data == null:
+		return { "error": CacheError.PARSE_ERROR, "data": null }
+	
 	
 	return {"error": CacheError.SUCESS, "data": parsed_file_data}
