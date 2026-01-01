@@ -103,6 +103,7 @@ func get_icon(game_id: String, file_name: String="icon.png", url: String="", rec
 	var request := await _request_icon(game_id, file_name, url, recache)
 	if request["error"] != CacheError.SUCESS:
 		push_warning("Failed to get icon %s" % [url])
+		return load("res://icon.svg")
 	
 	var image = Image.load_from_file(request["data"])
 	var texture = ImageTexture.create_from_image(image)
@@ -136,8 +137,8 @@ func _request_icon(game_id: String, file_name: String, url: String, recache: boo
 
 
 func get_games(recache: bool=false) -> Dictionary:
-	var url := "http://localhost:12345/games.json"
-	var request := await _request_games("games.json", url, recache) # url will be https://github.com/Ksawex4/NovaProot-Hub/raw/refs/heads/main/data/games.json later
+	var url := "https://github.com/Ksawex4/NovaProot-Hub/raw/refs/heads/main/data/games.json"
+	var request := await _request_games("games.json", url, recache)
 	if request["error"] != CacheError.SUCESS:
 		print("Failed to get games, %s" % url)
 		return request

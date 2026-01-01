@@ -1,0 +1,12 @@
+{
+    "block-jumper": {
+        "repo": "Ksawex4/Block-Jumper",
+        "name": "Block Jumper",
+        "icon": "https://github.com/Ksawex4/Block-Jumper/blob/main/Assets/Sprites/Backgrounds/Background1.png?raw=true"
+    },
+    "bouncy-onurb-fun": {
+        "repo": "Ksawex4/Bouncy-onurB-Fun",
+        "name": "Bouncy onurB Fun",
+        "icon": "http://192.168.0.2:12345/BouncyCover.png"
+    }
+}

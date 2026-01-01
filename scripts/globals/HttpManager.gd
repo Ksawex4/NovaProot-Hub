@@ -5,10 +5,15 @@ enum NovaError {
 	WRONG_RESPONSE,
 	PARSE_ERROR,
 	DOWNLOAD_FAIL,
+	EMPTY_URL,
 }
 
 
 func request(url: String, include_github_api: bool = false) -> Dictionary:
+	if url == "":
+		print("Url is empty")
+		return { "error": NovaError.EMPTY_URL, "data": null }
+	
 	# Adding the HTTPRequest node and setting it up
 	var Http_requester := HTTPRequest.new()
 	add_child(Http_requester)
@@ -44,6 +49,10 @@ func request(url: String, include_github_api: bool = false) -> Dictionary:
 
 
 func request_file(url: String, file_name: String, include_github_api: bool = false, download_file_path: String="user://downloads") -> Dictionary:
+	if url == "":
+		print("Url is empty")
+		return { "error": NovaError.EMPTY_URL, "data": null }
+	
 	# Adding the HTTPRequest node
 	var Http_requester := HTTPRequest.new()
 	add_child(Http_requester)
