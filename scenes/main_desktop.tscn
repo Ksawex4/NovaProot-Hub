@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bw4v1jc4pj0jo"]
+[gd_scene load_steps=10 format=3 uid="uid://bw4v1jc4pj0jo"]
 
 [ext_resource type="Script" uid="uid://iffvbyoqy3i5" path="res://scripts/background.gd" id="1_bwdwl"]
 [ext_resource type="PackedScene" uid="uid://dfkjh6coao8y6" path="res://scenes/game_entry.tscn" id="2_rsb3a"]
@@ -6,6 +6,7 @@
 [ext_resource type="Theme" uid="uid://ddkttranllejt" path="res://theme.tres" id="3_dmipi"]
 [ext_resource type="Script" uid="uid://ch5nfolwjnqeu" path="res://scripts/game_page.gd" id="3_wtlur"]
 [ext_resource type="Script" uid="uid://cl6mtal156fbu" path="res://scripts/launch.gd" id="5_yoxav"]
+[ext_resource type="Script" uid="uid://bhqodvw0ou7o6" path="res://scripts/RefreshButton.gd" id="7_g2tc1"]
 [ext_resource type="Script" uid="uid://c82ue3a1tl3xf" path="res://scripts/settings.gd" id="7_uxsxu"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_uttt5"]
@@ -85,6 +86,15 @@ mouse_filter = 2
 color = Color(0.13333334, 0.16862746, 0.27058825, 1)
 script = ExtResource("1_bwdwl")
 
+[node name="RefreshButton" type="Button" parent="TabContainer/Games"]
+layout_mode = 0
+offset_left = 994.0
+offset_top = 12.0
+offset_right = 1144.0
+offset_bottom = 43.0
+text = "Refresh All Cache"
+script = ExtResource("7_g2tc1")
+
 [node name="Settings" type="TabBar" parent="TabContainer"]
 visible = false
 layout_mode = 2
@@ -108,5 +118,6 @@ text = "Remove .zip/.apk after install"
 [connection signal="pressed" from="TabContainer/Games/Games/GamePage/Middle/Launch" to="TabContainer/Games/Games/GamePage" method="_on_launch_pressed"]
 [connection signal="item_selected" from="TabContainer/Games/Games/GamePage/Middle/Versions" to="TabContainer/Games/Games/GamePage" method="_on_versions_item_selected"]
 [connection signal="item_selected" from="TabContainer/Games/Games/GamePage/Middle/Os" to="TabContainer/Games/Games/GamePage" method="_on_os_item_selected"]
+[connection signal="pressed" from="TabContainer/Games/RefreshButton" to="TabContainer/Games/RefreshButton" method="_on_pressed"]
 [connection signal="text_submitted" from="TabContainer/Settings/GithubApiKey" to="TabContainer/Settings" method="_on_github_api_key_text_submitted"]
 [connection signal="toggled" from="TabContainer/Settings/RemoveAfterInstall" to="TabContainer/Settings" method="_on_remove_after_install_toggled"]

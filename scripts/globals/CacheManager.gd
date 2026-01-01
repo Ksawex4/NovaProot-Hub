@@ -13,6 +13,9 @@ enum CacheError {
 
 var RefreshCacheTimer := Timer.new()
 signal UpdateIcon(game_id: String, icon: Texture2D)
+signal UpdateGames()
+signal UpdateTags(game_id: String, tags: PackedStringArray)
+signal UpdateVersion(game_id: String, version: String)
 
 func _ready() -> void:
 	add_child(RefreshCacheTimer)
@@ -45,9 +48,11 @@ func recache_files(force_recache: bool=false) -> void:
 						print("Failed to recache games")
 						continue
 					GamesMan.Games = new_games["data"]
+					UpdateGames.emit()
 				"tags.json":
 					print(file_path, " age: %s" % file_age)
-					await GithubApiMan.get_repo_tags(GamesMan.Games[game_id]["repo"], game_id, true)
+					var new_tags := await GithubApiMan.get_repo_tags(GamesMan.Games[game_id]["repo"], game_id, true)
+					UpdateTags.emit(game_id, PackedStringArray(new_tags))
 				"icon.png":
 					print(file_path, " age: %s" % file_age) # this works
 					var new_icon := await get_icon(game_id, "icon.png", "", true)
@@ -57,6 +62,7 @@ func recache_files(force_recache: bool=false) -> void:
 					
 					if file_name.begins_with("v"):
 						GithubApiMan.get_repo_version(GamesMan.Games[game_id]["repo"], game_id, file_name.get_basename(), true)
+						UpdateVersion.emit(game_id, file_name.get_basename(), GamesMan.Games[game_id]["repo"])
 					else:
 						print("Don't know what to do with this cache file: ", file_path)
 
