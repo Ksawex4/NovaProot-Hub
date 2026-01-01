@@ -25,6 +25,11 @@ ZipMan="*res://scripts/globals/ZipManager.gd"
 GithubApiMan="*res://scripts/globals/GithubApiMan.gd"
 GamesMan="*res://scripts/globals/GamesManager.gd"
 
+[display]
+
+window/size/mode=2
+window/stretch/mode="canvas_items"
+
 [file_customization]
 
 folder_colors={
