@@ -42,7 +42,14 @@ func request(url: String, include_github_api: bool = false) -> Dictionary:
 	var json = JSON.new()
 	var err = json.parse(result[3].get_string_from_utf8())
 	
-	print(result[2])
+	var result_headers := _convert_header_to_dict(result[2])
+	if result_headers.has("X-RateLimit-Remaining"):
+		GithubApiMan.Api_calls_remaining = int(result_headers.get("X-RateLimit-Remaining", GithubApiMan.Api_calls_remaining))
+	if result_headers.has("X-RateLimit-Reset"):
+		GithubApiMan.Api_calls_reset = int(result_headers.get("X-RateLimit-Reset", GithubApiMan.Api_calls_reset))
+	if result_headers.has("X-RateLimit-Limit"):
+		GithubApiMan.Api_calls_limit = int(result_headers.get("X-RateLimit-Limit", GithubApiMan.Api_calls_limit))
+	
 	if err != OK:
 		print("Failed to parse: ", err)
 		return {"error": NovaError.PARSE_ERROR, "data": null}

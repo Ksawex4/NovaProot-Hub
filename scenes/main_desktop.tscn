@@ -154,6 +154,7 @@ offset_top = 168.0
 offset_right = 205.0
 offset_bottom = 191.0
 text = "Api calls remaining: %s/%s"
+justification_flags = 171
 script = ExtResource("10_r0qa7")
 
 [node name="ResetTime" type="Label" parent="TabContainer/Settings/ApiLimitCalls"]
