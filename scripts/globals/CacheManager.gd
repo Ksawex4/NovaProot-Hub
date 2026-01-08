@@ -15,7 +15,7 @@ var RefreshCacheTimer := Timer.new()
 signal UpdateIcon(game_id: String, icon: Texture2D)
 signal UpdateGames()
 signal UpdateTags(game_id: String, tags: PackedStringArray)
-signal UpdateVersion(game_id: String, version: String)
+signal UpdateVersion(game_id: String, version: String, repo: String)
 
 func _ready() -> void:
 	add_child(RefreshCacheTimer)

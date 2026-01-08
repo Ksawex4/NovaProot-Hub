@@ -150,9 +150,9 @@ text = "Clear All Cache"
 
 [node name="ApiLimitCalls" type="Label" parent="TabContainer/Settings"]
 layout_mode = 0
-offset_top = 120.0
-offset_right = 40.0
-offset_bottom = 143.0
+offset_top = 168.0
+offset_right = 205.0
+offset_bottom = 191.0
 text = "Api calls remaining: %s/%s"
 script = ExtResource("10_r0qa7")
 

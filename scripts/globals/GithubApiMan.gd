@@ -5,12 +5,22 @@ const RELEASE_URL = "https://api.github.com/repos/REPO/releases/tags/TAG"
 var Api_key: String = ""
 var Api_calls_remaining := -1
 var Api_calls_limit := 0
-var Api_calls_reset := ""
+var Api_calls_reset := 0
 
 func _ready() -> void:
 	var data := SaveMan.get_data_from_file("config.nova")
 	GithubApiMan.Api_key = data.get("api_key", "")
 	ZipMan.Remove_after_install = data.get("remove_after_install", true)
+
+
+func get_api_reset_time() -> String:
+	var time := "%s-%s-%s %s:%s:%s +%s%s"
+	var time_zone := Time.get_time_zone_from_system()
+	var time_unix: int = Api_calls_reset + (time_zone["bias"] * 60)
+	var time_dict := Time.get_datetime_dict_from_unix_time(time_unix)
+	time = time % [time_dict["year"], time_dict["month"], time_dict["day"], time_dict["hour"], time_dict["minute"], time_dict["second"], time_zone["name"], time_zone["bias"]/60]
+	
+	return time
 
 
 ## repository has to be Author/Repository for example "Ksawex4/Block-Jumper

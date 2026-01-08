@@ -7,6 +7,9 @@ enum NovaError {
 	DOWNLOAD_FAIL,
 	EMPTY_URL,
 }
+func _ready() -> void:
+	print(Time.get_time_zone_from_system())
+
 
 func request(url: String, include_github_api: bool = false) -> Dictionary:
 	if url == "":
@@ -80,7 +83,7 @@ func request_file(url: String, file_name: String, include_github_api: bool = fal
 	if result_headers.has("X-RateLimit-Remaining"):
 		GithubApiMan.Api_calls_remaining = int(result_headers.get("X-RateLimit-Remaining", GithubApiMan.Api_calls_remaining))
 	if result_headers.has("X-RateLimit-Reset"):
-		GithubApiMan.Api_calls_reset = Time.get_datetime_string_from_unix_time(int(result_headers.get("X-RateLimit-Reset", GithubApiMan.Api_calls_reset)))
+		GithubApiMan.Api_calls_reset = int(result_headers.get("X-RateLimit-Reset", GithubApiMan.Api_calls_reset))
 	if result_headers.has("X-RateLimit-Limit"):
 		GithubApiMan.Api_calls_limit = int(result_headers.get("X-RateLimit-Limit", GithubApiMan.Api_calls_limit)) 
 	
