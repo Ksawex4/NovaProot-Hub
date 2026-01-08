@@ -108,7 +108,6 @@ func _convert_header_to_dict(headers: PackedStringArray) -> Dictionary:
 			trimmed.append(split.trim_prefix(" ").trim_suffix(" "))
 		var key: String = trimmed[0]
 		var value
-		print(trimmed.size(), " ", trimmed)
 		if trimmed.size() > 2:
 			value = []
 			for valuer in trimmed:
