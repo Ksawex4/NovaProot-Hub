@@ -137,7 +137,7 @@ func _request_icon(game_id: String, file_name: String, url: String, recache: boo
 
 
 func get_games(recache: bool=false) -> Dictionary:
-	var url := "https://github.com/Ksawex4/NovaProot-Hub/raw/refs/heads/main/data/games.json"
+	var url := "https://raw.githubusercontent.com/Ksawex4/NovaProot-Hub/refs/heads/main/data/games.json"
 	var request := await _request_games("games.json", url, recache)
 	if request["error"] != CacheError.SUCESS:
 		print("Failed to get games, %s" % url)
@@ -155,7 +155,7 @@ func _request_games(file_name: String, url: String, recache: bool=false) -> Dict
 	if FileAccess.file_exists(file_path) and not recache:
 		return {"error": CacheError.SUCESS, "data": file_path}
 	
-	var request := await HttpMan.request_file(url, file_name, true, CACHE_DIR)
+	var request := await HttpMan.request_file(url, file_name, false, CACHE_DIR)
 	
 	if request["error"] != HttpMan.NovaError.SUCESS:
 		print("Failed to download games, url: ", url, " error: ", request["error"])
@@ -259,8 +259,9 @@ func parse_json(file_path: String) -> Dictionary:
 		return { "error": CacheError.FILE_DOESNT_EXIST, "data": null }
 	
 	var file = FileAccess.open(file_path, FileAccess.READ)
-	if file == null:
+	if file == null or FileAccess.get_open_error() != OK:
 		push_warning("Failed to read file ", file_path, " got open error ", FileAccess.get_open_error())
+		return {"error": CacheError.READ_FAIL, "data": null}
 	
 	var parsed_file_data = JSON.parse_string(file.get_as_text())
 	if parsed_file_data == null:

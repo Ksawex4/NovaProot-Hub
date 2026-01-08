@@ -8,7 +8,6 @@ enum NovaError {
 	EMPTY_URL,
 }
 
-
 func request(url: String, include_github_api: bool = false) -> Dictionary:
 	if url == "":
 		print("Url is empty")
@@ -20,12 +19,11 @@ func request(url: String, include_github_api: bool = false) -> Dictionary:
 	Http_requester.use_threads = true
 	Http_requester.download_file = ""
 	
-	var headers := PackedStringArray([])
+	var headers := PackedStringArray(["User-Agent: NovaProotHub/beta1", "Accept: application/vnd.github.v3+json"])
 	if include_github_api:
-		headers = PackedStringArray([
-		"Accept: application/vnd.github.v3+json",
+		headers.append_array(PackedStringArray([
 		"Authorization: token " + GithubApiMan.Api_key
-		])
+		]))
 	
 	# requesting and freeing node after request
 	print("request url: ", url)
@@ -40,6 +38,8 @@ func request(url: String, include_github_api: bool = false) -> Dictionary:
 	# Parsing
 	var json = JSON.new()
 	var err = json.parse(result[3].get_string_from_utf8())
+	
+	print(result[2])
 	if err != OK:
 		print("Failed to parse: ", err)
 		return {"error": NovaError.PARSE_ERROR, "data": null}
@@ -59,12 +59,11 @@ func request_file(url: String, file_name: String, include_github_api: bool = fal
 	Http_requester.use_threads = true
 	Http_requester.download_file = download_file_path + "/" + file_name
 	
-	var headers := PackedStringArray([])
-	if include_github_api:
-		headers = PackedStringArray([
-		"Accept: application/vnd.github.v3+json",
+	var headers := PackedStringArray(["User-Agent: NovaProotHub/beta1", "Accept: application/vnd.github.v3+json"])
+	if include_github_api and not GithubApiMan.Api_key.is_empty():
+		headers.append_array(PackedStringArray([
 		"Authorization: token " + GithubApiMan.Api_key
-	])
+		]))
 	
 	# Creating directory if it doesn't exist
 	if not DirAccess.dir_exists_absolute(download_file_path):
@@ -77,6 +76,13 @@ func request_file(url: String, file_name: String, include_github_api: bool = fal
 	var result = await Http_requester.request_completed
 	Http_requester.queue_free()
 	
+	var result_headers := _convert_header_to_dict(result[2])
+	if result_headers.has("X-RateLimit-Remaining"):
+		GithubApiMan.Api_calls_remaining = int(result_headers.get("X-RateLimit-Remaining", GithubApiMan.Api_calls_remaining))
+	if result_headers.has("X-RateLimit-Reset"):
+		GithubApiMan.Api_calls_reset = Time.get_datetime_string_from_unix_time(int(result_headers.get("X-RateLimit-Reset", GithubApiMan.Api_calls_reset)))
+	if result_headers.has("X-RateLimit-Limit"):
+		GithubApiMan.Api_calls_limit = int(result_headers.get("X-RateLimit-Limit", GithubApiMan.Api_calls_limit)) 
 	
 	if result[0] != OK or result[1] != 200:
 		print("Failed, result: %s,result_code: %s" % [result[0], result[1]])
@@ -88,3 +94,26 @@ func request_file(url: String, file_name: String, include_github_api: bool = fal
 		return {"error": NovaError.DOWNLOAD_FAIL, "data": null}
 	
 	return {"error": NovaError.SUCESS, "data": file_save_path}
+
+
+func _convert_header_to_dict(headers: PackedStringArray) -> Dictionary:
+	var dict := {}
+	for head in headers:
+		var splitted := head.split(":")
+		var trimmed := []
+		for split in splitted:
+			trimmed.append(split.trim_prefix(" ").trim_suffix(" "))
+		var key: String = trimmed[0]
+		var value
+		print(trimmed.size(), " ", trimmed)
+		if trimmed.size() > 2:
+			value = []
+			for valuer in trimmed:
+				if valuer != key:
+					value.append("valuer")
+		else:
+			value = trimmed[1]
+		dict.set(key, value)
+	
+	print(dict)
+	return dict
