@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bw4v1jc4pj0jo"]
+[gd_scene load_steps=12 format=3 uid="uid://bw4v1jc4pj0jo"]
 
 [ext_resource type="Script" uid="uid://iffvbyoqy3i5" path="res://scripts/background.gd" id="1_bwdwl"]
 [ext_resource type="PackedScene" uid="uid://dfkjh6coao8y6" path="res://scenes/game_entry.tscn" id="2_rsb3a"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://bkhgv2o4kprfm" path="res://scripts/uninstall.gd" id="6_rd4of"]
 [ext_resource type="Script" uid="uid://bhqodvw0ou7o6" path="res://scripts/RefreshButton.gd" id="7_g2tc1"]
 [ext_resource type="Script" uid="uid://c82ue3a1tl3xf" path="res://scripts/settings.gd" id="7_uxsxu"]
+[ext_resource type="Script" uid="uid://csgc38h6udpr1" path="res://scripts/api_limit_calls.gd" id="10_r0qa7"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_uttt5"]
 font_size = 28
@@ -18,9 +19,10 @@ font_size = 28
 [node name="TabContainer" type="TabContainer" parent="."]
 offset_right = 1153.0
 offset_bottom = 40.0
-current_tab = 0
+current_tab = 1
 
 [node name="Games" type="TabBar" parent="TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -106,7 +108,6 @@ text = "Refresh All Cache"
 script = ExtResource("7_g2tc1")
 
 [node name="Settings" type="TabBar" parent="TabContainer"]
-visible = false
 layout_mode = 2
 script = ExtResource("7_uxsxu")
 metadata/_tab_index = 1
@@ -146,6 +147,21 @@ offset_top = 52.0
 offset_right = 474.0
 offset_bottom = 99.0
 text = "Clear All Cache"
+
+[node name="ApiLimitCalls" type="Label" parent="TabContainer/Settings"]
+layout_mode = 0
+offset_top = 120.0
+offset_right = 40.0
+offset_bottom = 143.0
+text = "Api calls remaining: %s/%s"
+script = ExtResource("10_r0qa7")
+
+[node name="ResetTime" type="Label" parent="TabContainer/Settings/ApiLimitCalls"]
+layout_mode = 0
+offset_top = 24.0
+offset_right = 79.0
+offset_bottom = 47.0
+text = "Resets at: %s"
 
 [connection signal="pressed" from="TabContainer/Games/Games/GamePage/Middle/Launch" to="TabContainer/Games/Games/GamePage" method="_on_launch_pressed"]
 [connection signal="item_selected" from="TabContainer/Games/Games/GamePage/Middle/Versions" to="TabContainer/Games/Games/GamePage" method="_on_versions_item_selected"]

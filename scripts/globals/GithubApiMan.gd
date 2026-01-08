@@ -3,6 +3,9 @@ extends Node
 const TAGS_URL = "https://api.github.com/repos/REPO/tags" # REPO is for example Ksawex4/Block-Jumper
 const RELEASE_URL = "https://api.github.com/repos/REPO/releases/tags/TAG"
 var Api_key: String = ""
+var Api_calls_remaining := -1
+var Api_calls_limit := 0
+var Api_calls_reset := ""
 
 func _ready() -> void:
 	var data := SaveMan.get_data_from_file("config.nova")
