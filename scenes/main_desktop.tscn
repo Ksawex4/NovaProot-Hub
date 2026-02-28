@@ -1,32 +1,31 @@
-[gd_scene load_steps=12 format=3 uid="uid://bw4v1jc4pj0jo"]
+[gd_scene format=3 uid="uid://bw4v1jc4pj0jo"]
 
-[ext_resource type="Script" uid="uid://iffvbyoqy3i5" path="res://scripts/background.gd" id="1_bwdwl"]
-[ext_resource type="PackedScene" uid="uid://dfkjh6coao8y6" path="res://scenes/game_entry.tscn" id="2_rsb3a"]
-[ext_resource type="Script" uid="uid://d27123pwwj8v0" path="res://scripts/games.gd" id="2_uttt5"]
-[ext_resource type="Theme" uid="uid://ddkttranllejt" path="res://theme.tres" id="3_dmipi"]
-[ext_resource type="Script" uid="uid://ch5nfolwjnqeu" path="res://scripts/game_page.gd" id="3_wtlur"]
-[ext_resource type="Script" uid="uid://cl6mtal156fbu" path="res://scripts/launch.gd" id="5_yoxav"]
-[ext_resource type="Script" uid="uid://bkhgv2o4kprfm" path="res://scripts/uninstall.gd" id="6_rd4of"]
-[ext_resource type="Script" uid="uid://bhqodvw0ou7o6" path="res://scripts/RefreshButton.gd" id="7_g2tc1"]
-[ext_resource type="Script" uid="uid://c82ue3a1tl3xf" path="res://scripts/settings.gd" id="7_uxsxu"]
-[ext_resource type="Script" uid="uid://csgc38h6udpr1" path="res://scripts/api_limit_calls.gd" id="10_r0qa7"]
+[ext_resource type="Script" uid="uid://d27123pwwj8v0" path="res://scripts/games.gd" id="1_r0qa7"]
+[ext_resource type="PackedScene" uid="uid://dfkjh6coao8y6" path="res://scenes/game_entry.tscn" id="2_ul6qo"]
+[ext_resource type="Script" uid="uid://ch5nfolwjnqeu" path="res://scripts/game_page.gd" id="3_yte0r"]
+[ext_resource type="Theme" uid="uid://ddkttranllejt" path="res://theme.tres" id="4_uav46"]
+[ext_resource type="Script" uid="uid://cl6mtal156fbu" path="res://scripts/launch.gd" id="5_6n1oi"]
+[ext_resource type="Script" uid="uid://bkhgv2o4kprfm" path="res://scripts/uninstall.gd" id="6_yjxpm"]
+[ext_resource type="Script" uid="uid://iffvbyoqy3i5" path="res://scripts/background.gd" id="7_0kpg1"]
+[ext_resource type="Script" uid="uid://bhqodvw0ou7o6" path="res://scripts/RefreshButton.gd" id="8_bohu2"]
+[ext_resource type="Script" uid="uid://c82ue3a1tl3xf" path="res://scripts/settings.gd" id="9_etjt2"]
+[ext_resource type="Script" uid="uid://csgc38h6udpr1" path="res://scripts/api_limit_calls.gd" id="10_ikqxc"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_uttt5"]
 font_size = 28
 
-[node name="MainDesktop" type="Node2D"]
+[node name="MainDesktop" type="Node2D" unique_id=424664858]
 
-[node name="TabContainer" type="TabContainer" parent="."]
+[node name="TabContainer" type="TabContainer" parent="." unique_id=2132862236]
 offset_right = 1153.0
 offset_bottom = 40.0
-current_tab = 1
+current_tab = 0
 
-[node name="Games" type="TabBar" parent="TabContainer"]
-visible = false
+[node name="Games" type="TabBar" parent="TabContainer" unique_id=207616563]
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="Games" type="HSplitContainer" parent="TabContainer/Games"]
+[node name="Games" type="HSplitContainer" parent="TabContainer/Games" unique_id=1095940115]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -34,61 +33,61 @@ offset_top = 31.0
 offset_right = 563.0
 offset_bottom = 622.0
 
-[node name="Games" type="VBoxContainer" parent="TabContainer/Games/Games"]
+[node name="Games" type="VBoxContainer" parent="TabContainer/Games/Games" unique_id=1086889068]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-script = ExtResource("2_uttt5")
+script = ExtResource("1_r0qa7")
 
-[node name="GameEntry" parent="TabContainer/Games/Games/Games" instance=ExtResource("2_rsb3a")]
+[node name="GameEntry" parent="TabContainer/Games/Games/Games" unique_id=559180568 instance=ExtResource("2_ul6qo")]
 z_index = 2
 layout_mode = 2
 
-[node name="GameEntry2" parent="TabContainer/Games/Games/Games" instance=ExtResource("2_rsb3a")]
+[node name="GameEntry2" parent="TabContainer/Games/Games/Games" unique_id=114651906 instance=ExtResource("2_ul6qo")]
 layout_mode = 2
 
-[node name="GamePage" type="VBoxContainer" parent="TabContainer/Games/Games"]
+[node name="GamePage" type="VBoxContainer" parent="TabContainer/Games/Games" unique_id=1875972719]
 layout_mode = 2
-script = ExtResource("3_wtlur")
+script = ExtResource("3_yte0r")
 
-[node name="Icon" type="TextureRect" parent="TabContainer/Games/Games/GamePage"]
+[node name="Icon" type="TextureRect" parent="TabContainer/Games/Games/GamePage" unique_id=2083233294]
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 2
 
-[node name="Middle" type="HBoxContainer" parent="TabContainer/Games/Games/GamePage"]
+[node name="Middle" type="HBoxContainer" parent="TabContainer/Games/Games/GamePage" unique_id=519750022]
 layout_mode = 2
 
-[node name="Launch" type="Button" parent="TabContainer/Games/Games/GamePage/Middle"]
+[node name="Launch" type="Button" parent="TabContainer/Games/Games/GamePage/Middle" unique_id=944430408]
 layout_mode = 2
-theme = ExtResource("3_dmipi")
+theme = ExtResource("4_uav46")
 text = "Wait"
-script = ExtResource("5_yoxav")
+script = ExtResource("5_6n1oi")
 
-[node name="GameName" type="Label" parent="TabContainer/Games/Games/GamePage/Middle"]
+[node name="GameName" type="Label" parent="TabContainer/Games/Games/GamePage/Middle" unique_id=1692677940]
 layout_mode = 2
 text = "No Game"
 label_settings = SubResource("LabelSettings_uttt5")
 
-[node name="Versions" type="OptionButton" parent="TabContainer/Games/Games/GamePage/Middle"]
+[node name="Versions" type="OptionButton" parent="TabContainer/Games/Games/GamePage/Middle" unique_id=566880110]
 layout_mode = 2
 
-[node name="Os" type="OptionButton" parent="TabContainer/Games/Games/GamePage/Middle"]
+[node name="Os" type="OptionButton" parent="TabContainer/Games/Games/GamePage/Middle" unique_id=1715770189]
 layout_mode = 2
 
-[node name="Uninstall" type="Button" parent="TabContainer/Games/Games/GamePage/Middle"]
+[node name="Uninstall" type="Button" parent="TabContainer/Games/Games/GamePage/Middle" unique_id=1069911796]
 layout_mode = 2
 text = "Wait"
-script = ExtResource("6_rd4of")
+script = ExtResource("6_yjxpm")
 
-[node name="OpenDir" type="Button" parent="TabContainer/Games/Games/GamePage/Middle"]
+[node name="OpenDir" type="Button" parent="TabContainer/Games/Games/GamePage/Middle" unique_id=1399936517]
 layout_mode = 2
 text = "Open Dir"
 
-[node name="Changelog" type="RichTextLabel" parent="TabContainer/Games/Games/GamePage"]
+[node name="Changelog" type="RichTextLabel" parent="TabContainer/Games/Games/GamePage" unique_id=1695181209]
 custom_minimum_size = Vector2(0, 320)
 layout_mode = 2
 
-[node name="Background" type="ColorRect" parent="TabContainer/Games"]
+[node name="Background" type="ColorRect" parent="TabContainer/Games" unique_id=900705560]
 z_index = -1
 layout_mode = 0
 anchor_right = 1.0
@@ -96,51 +95,52 @@ anchor_bottom = 1.0
 offset_top = 31.0
 mouse_filter = 2
 color = Color(0.13333334, 0.16862746, 0.27058825, 1)
-script = ExtResource("1_bwdwl")
+script = ExtResource("7_0kpg1")
 
-[node name="RefreshButton" type="Button" parent="TabContainer/Games"]
+[node name="RefreshButton" type="Button" parent="TabContainer/Games" unique_id=1075811975]
 layout_mode = 0
 offset_left = 994.0
 offset_top = 12.0
 offset_right = 1144.0
 offset_bottom = 43.0
 text = "Refresh All Cache"
-script = ExtResource("7_g2tc1")
+script = ExtResource("8_bohu2")
 
-[node name="Settings" type="TabBar" parent="TabContainer"]
+[node name="Settings" type="TabBar" parent="TabContainer" unique_id=1778971960]
+visible = false
 layout_mode = 2
-script = ExtResource("7_uxsxu")
+script = ExtResource("9_etjt2")
 metadata/_tab_index = 1
 
-[node name="GithubApiKey" type="LineEdit" parent="TabContainer/Settings"]
+[node name="GithubApiKey" type="LineEdit" parent="TabContainer/Settings" unique_id=451145849]
 layout_mode = 0
 offset_top = 16.0
 offset_right = 1151.0
 offset_bottom = 47.0
 placeholder_text = "API key"
 
-[node name="RemoveAfterInstall" type="CheckButton" parent="TabContainer/Settings"]
+[node name="RemoveAfterInstall" type="CheckButton" parent="TabContainer/Settings" unique_id=548166974]
 layout_mode = 0
 offset_top = 56.0
-offset_right = 273.0
+offset_right = 234.0
 offset_bottom = 87.0
-text = "Remove .zip/.apk after install"
+text = "Remove .zip after install"
 
-[node name="ShowApiKey" type="CheckButton" parent="TabContainer/Settings"]
+[node name="ShowApiKey" type="CheckButton" parent="TabContainer/Settings" unique_id=1314051775]
 layout_mode = 0
 offset_top = 88.0
 offset_right = 152.0
 offset_bottom = 119.0
 text = "Show API Key"
 
-[node name="ApiKey" type="Label" parent="TabContainer/Settings/ShowApiKey"]
+[node name="ApiKey" type="Label" parent="TabContainer/Settings/ShowApiKey" unique_id=1451776767]
 layout_mode = 0
 offset_top = 32.0
 offset_right = 1153.0
 offset_bottom = 81.0
 autowrap_mode = 1
 
-[node name="ClearCache" type="Button" parent="TabContainer/Settings"]
+[node name="ClearCache" type="Button" parent="TabContainer/Settings" unique_id=385561444]
 layout_mode = 0
 offset_left = 306.0
 offset_top = 52.0
@@ -148,21 +148,37 @@ offset_right = 474.0
 offset_bottom = 99.0
 text = "Clear All Cache"
 
-[node name="ApiLimitCalls" type="Label" parent="TabContainer/Settings"]
+[node name="ApiLimitCalls" type="Label" parent="TabContainer/Settings" unique_id=89245165]
 layout_mode = 0
 offset_top = 168.0
 offset_right = 205.0
 offset_bottom = 191.0
 text = "Api calls remaining: %s/%s"
 justification_flags = 171
-script = ExtResource("10_r0qa7")
+script = ExtResource("10_ikqxc")
 
-[node name="ResetTime" type="Label" parent="TabContainer/Settings/ApiLimitCalls"]
+[node name="ResetTime" type="Label" parent="TabContainer/Settings/ApiLimitCalls" unique_id=41340951]
 layout_mode = 0
 offset_top = 24.0
 offset_right = 79.0
 offset_bottom = 47.0
 text = "Resets at: %s"
+
+[node name="ClearApk" type="Button" parent="TabContainer/Settings" unique_id=1925334248]
+layout_mode = 0
+offset_left = 476.0
+offset_top = 52.0
+offset_right = 652.0
+offset_bottom = 99.0
+text = "Clear Downloads"
+
+[node name="OpenDownloads" type="Button" parent="TabContainer/Settings" unique_id=377621321]
+layout_mode = 0
+offset_left = 655.0
+offset_top = 52.0
+offset_right = 831.0
+offset_bottom = 99.0
+text = "Open Downloads dir"
 
 [connection signal="pressed" from="TabContainer/Games/Games/GamePage/Middle/Launch" to="TabContainer/Games/Games/GamePage" method="_on_launch_pressed"]
 [connection signal="item_selected" from="TabContainer/Games/Games/GamePage/Middle/Versions" to="TabContainer/Games/Games/GamePage" method="_on_versions_item_selected"]
@@ -174,3 +190,5 @@ text = "Resets at: %s"
 [connection signal="toggled" from="TabContainer/Settings/RemoveAfterInstall" to="TabContainer/Settings" method="_on_remove_after_install_toggled"]
 [connection signal="toggled" from="TabContainer/Settings/ShowApiKey" to="TabContainer/Settings" method="_on_show_api_key_toggled"]
 [connection signal="pressed" from="TabContainer/Settings/ClearCache" to="TabContainer/Settings" method="_on_clear_cache_pressed"]
+[connection signal="pressed" from="TabContainer/Settings/ClearApk" to="TabContainer/Settings" method="_on_clear_apk_pressed"]
+[connection signal="pressed" from="TabContainer/Settings/OpenDownloads" to="TabContainer/Settings" method="_on_open_downloads_pressed"]

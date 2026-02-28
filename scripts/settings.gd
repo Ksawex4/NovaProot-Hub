@@ -23,3 +23,18 @@ func _on_show_api_key_toggled(toggled_on: bool) -> void:
 		$ShowApiKey/ApiKey.text = GithubApiMan.Api_key
 	else:
 		$ShowApiKey/ApiKey.text = ""
+
+
+func _on_clear_apk_pressed() -> void:
+	var path: String = OS.get_system_dir(OS.SYSTEM_DIR_DOWNLOADS).path_join("NovaProotHub")
+	var dir: DirAccess = DirAccess.open(path)
+	for file in dir.get_files():
+		print(dir.get_current_dir().path_join(file))
+		DirAccess.remove_absolute(dir.get_current_dir().path_join(file))
+
+
+func _on_open_downloads_pressed() -> void:
+	var path: String = OS.get_system_dir(OS.SYSTEM_DIR_DOWNLOADS).path_join("NovaProotHub")
+	if OS.get_name() != "Android":
+		path = ProjectSettings.globalize_path("user://downloads/")
+	OS.shell_show_in_file_manager(path)

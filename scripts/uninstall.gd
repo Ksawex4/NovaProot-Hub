@@ -11,6 +11,7 @@ var Game_id := ""
 var Version := ""
 var Os := ""
 
+
 func _on_pressed() -> void:
 	print("Duck", State)
 	if State == 1:

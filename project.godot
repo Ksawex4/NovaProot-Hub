@@ -8,12 +8,17 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="NovaProot Hub"
-config/version="beta1.1"
+config/version="beta2"
 run/main_scene="uid://bw4v1jc4pj0jo"
-config/features=PackedStringArray("4.5", "GL Compatibility")
+config/features=PackedStringArray("4.6", "GL Compatibility")
+run/low_processor_mode=true
 config/icon="res://icon.svg"
 
 [autoload]
@@ -31,6 +36,10 @@ GamesMan="*res://scripts/globals/GamesManager.gd"
 window/size/mode=2
 window/stretch/mode="canvas_items"
 
+[editor_plugins]
+
+enabled=PackedStringArray()
+
 [file_customization]
 
 folder_colors={
@@ -42,3 +51,4 @@ folder_colors={
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true

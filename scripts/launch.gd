@@ -19,18 +19,30 @@ func update_state(game_id: String, version: String, os: String) -> void:
 	else:
 		State = States.DOWNLOAD
 		text = "Download"
-	uninstall.update_state(game_id, version, os)
+	if uninstall:
+		uninstall.update_state(game_id, version, os)
 
 
 func on_pressed(game_id: String, version: String, game_release: Dictionary, os: String, update_uninstall: bool=false) -> void:
 	match State:
 		States.LAUNCH:
-			OS.create_process(GamesMan.get_game_executable_path(game_id, version, os), [])
+			var executable_path: String = GamesMan.get_game_executable_path(game_id, version, os)
+			
+			match OS.get_name():
+				"Android":
+					print("Currently not avaible")
+				"Windows":
+					OS.create_process(executable_path, [])
+				"Linux":
+					if os == "Linux":
+						print(executable_path)
+						OS.create_process(executable_path, [])
+			
 		States.DOWNLOAD:
 			State = States.WAITING
 			text = "Wait"
 			Os = os
 			await FileMan.download_game(game_id, version, game_release, os)
 			update_state(game_id, version, Os)
-			if update_uninstall:
+			if update_uninstall and uninstall:
 				uninstall.update_state(game_id, version, os)
