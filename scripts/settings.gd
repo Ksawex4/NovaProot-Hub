@@ -27,6 +27,8 @@ func _on_show_api_key_toggled(toggled_on: bool) -> void:
 
 func _on_clear_apk_pressed() -> void:
 	var path: String = OS.get_system_dir(OS.SYSTEM_DIR_DOWNLOADS).path_join("NovaProotHub")
+	if OS.get_name() != "Android":
+		path = "user://downloads"
 	var dir: DirAccess = DirAccess.open(path)
 	for file in dir.get_files():
 		print(dir.get_current_dir().path_join(file))
