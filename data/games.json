@@ -4,6 +4,11 @@
 		"name": "Block Jumper",
 		"icon": "https://github.com/Ksawex4/NovaProot-Hub/blob/main/data/Block_JumperCover.png?raw=true"
 	},
+	"block-jumper-godot": {
+		"repo": "Ksawex4/Block-Jumper-Godot",
+		"name": "Block Jumper Godot",
+		"icon": "https://github.com/Ksawex4/NovaProot-Hub/blob/main/data/Block_JumperCover.png?raw=true"
+	},
 	"bouncy-onurb-fun": {
 		"repo": "Ksawex4/Bouncy-onurB-Fun",
 		"name": "Bouncy onurB Fun",
