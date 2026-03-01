@@ -51,7 +51,8 @@ func install_apk(download_path: String) -> void:
 		push_warning("Not an Android device")
 		return
 	
-	if !OS.request_permissions():
+	OS.request_permissions()
+	if !OS.request_permission("android.permission.MANAGE_EXTERNAL_STORAGE"):
 		print("Dont have permissions")
 		print(OS.get_granted_permissions())
 		return
