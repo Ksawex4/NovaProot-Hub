@@ -1,0 +1,193 @@
+[gd_scene format=3 uid="uid://fkakbvbhvdv7"]
+
+[ext_resource type="PackedScene" uid="uid://beafaue1ifqfd" path="res://scenes/game-entry.tscn" id="1_476ko"]
+[ext_resource type="Texture2D" uid="uid://kl1qyu38ysxp" path="res://icon.svg" id="2_srd3t"]
+
+[node name="MainDesktop-new" type="Control" unique_id=1609716568]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TabContainer" type="TabContainer" parent="." unique_id=1024982628]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+current_tab = 1
+
+[node name="Games" type="TabBar" parent="TabContainer" unique_id=423924192]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Background" type="ColorRect" parent="TabContainer/Games" unique_id=913974121]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.13333334, 0.16862746, 0.27058825, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Games" unique_id=2126300998]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Games/VBoxContainer" unique_id=505328748]
+layout_mode = 2
+alignment = 2
+
+[node name="Recache" type="Button" parent="TabContainer/Games/VBoxContainer/HBoxContainer" unique_id=2123425305]
+layout_mode = 2
+text = "Refresh Cache"
+
+[node name="Redownload" type="Button" parent="TabContainer/Games/VBoxContainer/HBoxContainer" unique_id=1986844017]
+layout_mode = 2
+text = "Redownload games.json"
+
+[node name="HSplitContainer" type="HSplitContainer" parent="TabContainer/Games/VBoxContainer" unique_id=930466134]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GamesScroll" type="ScrollContainer" parent="TabContainer/Games/VBoxContainer/HSplitContainer" unique_id=819527886]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Games" type="VBoxContainer" parent="TabContainer/Games/VBoxContainer/HSplitContainer/GamesScroll" unique_id=1231631596]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="GameEntry-new" parent="TabContainer/Games/VBoxContainer/HSplitContainer/GamesScroll/Games" unique_id=1483295751 instance=ExtResource("1_476ko")]
+layout_mode = 2
+
+[node name="GameEntry-new2" parent="TabContainer/Games/VBoxContainer/HSplitContainer/GamesScroll/Games" unique_id=669881343 instance=ExtResource("1_476ko")]
+layout_mode = 2
+
+[node name="GameEntry-new3" parent="TabContainer/Games/VBoxContainer/HSplitContainer/GamesScroll/Games" unique_id=858142096 instance=ExtResource("1_476ko")]
+layout_mode = 2
+
+[node name="GameEntry-new4" parent="TabContainer/Games/VBoxContainer/HSplitContainer/GamesScroll/Games" unique_id=1455154680 instance=ExtResource("1_476ko")]
+layout_mode = 2
+
+[node name="GamePage" type="VBoxContainer" parent="TabContainer/Games/VBoxContainer/HSplitContainer" unique_id=1107758455]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Icon" type="TextureRect" parent="TabContainer/Games/VBoxContainer/HSplitContainer/GamePage" unique_id=809728711]
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("2_srd3t")
+expand_mode = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Games/VBoxContainer/HSplitContainer/GamePage" unique_id=1371084861]
+layout_mode = 2
+
+[node name="Play" type="Button" parent="TabContainer/Games/VBoxContainer/HSplitContainer/GamePage/HBoxContainer" unique_id=1595972945]
+layout_mode = 2
+text = "Play"
+
+[node name="GameName" type="Label" parent="TabContainer/Games/VBoxContainer/HSplitContainer/GamePage/HBoxContainer" unique_id=1608271855]
+layout_mode = 2
+text = "The Is No Game"
+
+[node name="Versions" type="OptionButton" parent="TabContainer/Games/VBoxContainer/HSplitContainer/GamePage/HBoxContainer" unique_id=1854480087]
+layout_mode = 2
+
+[node name="Os" type="OptionButton" parent="TabContainer/Games/VBoxContainer/HSplitContainer/GamePage/HBoxContainer" unique_id=1993111425]
+layout_mode = 2
+
+[node name="Uninstall" type="Button" parent="TabContainer/Games/VBoxContainer/HSplitContainer/GamePage/HBoxContainer" unique_id=1378461679]
+layout_mode = 2
+text = "Uninstall"
+
+[node name="OpenDir" type="Button" parent="TabContainer/Games/VBoxContainer/HSplitContainer/GamePage/HBoxContainer" unique_id=1621296986]
+layout_mode = 2
+text = "Open Dir"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Games/VBoxContainer/HSplitContainer/GamePage" unique_id=1014261781]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+[node name="Settings" type="TabBar" parent="TabContainer" unique_id=152291485]
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Background" type="ColorRect" parent="TabContainer/Settings" unique_id=1076991065]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.13333334, 0.16862746, 0.27058825, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Settings" unique_id=2048529213]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LineEdit" type="LineEdit" parent="TabContainer/Settings/VBoxContainer" unique_id=1087514381]
+layout_mode = 2
+placeholder_text = "Your github api key"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Settings/VBoxContainer" unique_id=24851930]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Settings/VBoxContainer/HBoxContainer" unique_id=1161941300]
+layout_mode = 2
+
+[node name="RemoveAfterInstall" type="CheckButton" parent="TabContainer/Settings/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1682259802]
+layout_mode = 2
+text = "Remove .zip after install (desktop only"
+
+[node name="ShowApiKey" type="CheckButton" parent="TabContainer/Settings/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1867404413]
+layout_mode = 2
+text = "Show Api Key"
+
+[node name="ClearCache" type="Button" parent="TabContainer/Settings/VBoxContainer/HBoxContainer" unique_id=696384763]
+layout_mode = 2
+text = "Clear All Cache
+"
+
+[node name="ClearDownloads" type="Button" parent="TabContainer/Settings/VBoxContainer/HBoxContainer" unique_id=460767551]
+layout_mode = 2
+text = "Clear Downloads
+"
+
+[node name="OpenDownloads" type="Button" parent="TabContainer/Settings/VBoxContainer/HBoxContainer" unique_id=2060094118]
+layout_mode = 2
+text = "Open Downloads folder"
+
+[node name="ApiKey" type="Label" parent="TabContainer/Settings/VBoxContainer" unique_id=1394083268]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+autowrap_mode = 1
+
+[node name="ApiCallsRemaining" type="Label" parent="TabContainer/Settings/VBoxContainer" unique_id=2055244392]
+layout_mode = 2
+text = "Api calls remaining: %s/%s"
+
+[node name="ResetTime" type="Label" parent="TabContainer/Settings/VBoxContainer/ApiCallsRemaining" unique_id=1928783501]
+layout_mode = 0
+offset_top = 27.0
+offset_right = 1152.0
+offset_bottom = 50.0
+text = "Resets at: %s"

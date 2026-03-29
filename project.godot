@@ -15,9 +15,9 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="NovaProot Hub"
-config/version="beta2"
+config/version="beta3"
 config/tags=PackedStringArray("2d", "android", "git", "linux", "online", "windows")
-run/main_scene="uid://bw4v1jc4pj0jo"
+run/main_scene="uid://fkakbvbhvdv7"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 run/low_processor_mode=true
 config/icon="res://icon.svg"
@@ -34,8 +34,8 @@ GamesMan="*res://scripts/globals/GamesManager.gd"
 
 [display]
 
-window/size/mode=2
-window/stretch/mode="canvas_items"
+window/stretch/aspect="ignore"
+window/stretch/scale=1.5
 
 [editor_plugins]
 

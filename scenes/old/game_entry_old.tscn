@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://dfkjh6coao8y6"]
+
+[ext_resource type="Theme" uid="uid://ddkttranllejt" path="res://theme.tres" id="1_takgh"]
+[ext_resource type="Texture2D" uid="uid://kl1qyu38ysxp" path="res://icon.svg" id="2_5la8l"]
+[ext_resource type="Script" uid="uid://b5agh8hls1fjd" path="res://scripts/old/game_entry.gd" id="3_60aqh"]
+
+[node name="GameEntry" type="Button" unique_id=2036331616]
+custom_minimum_size = Vector2(148, 128)
+offset_right = 356.0
+offset_bottom = 127.0
+theme = ExtResource("1_takgh")
+text = "Block Jumper"
+icon = ExtResource("2_5la8l")
+script = ExtResource("3_60aqh")
+
+[node name="Icon" type="TextureRect" parent="." unique_id=1755407287]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 128.0
+mouse_filter = 2
+texture = ExtResource("2_5la8l")
+expand_mode = 1
+stretch_mode = 5
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]
