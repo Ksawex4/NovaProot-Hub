@@ -1,23 +1,30 @@
 {
-	"block-jumper": {
-		"repo": "Ksawex4/Block-Jumper",
-		"name": "Block Jumper",
-		"icon": "https://github.com/Ksawex4/NovaProot-Hub/blob/main/data/Block_JumperCover.png?raw=true"
-	},
-	"block-jumper-godot": {
-		"repo": "Ksawex4/Block-Jumper-Godot",
-		"name": "Block Jumper Godot",
-		"icon": "https://github.com/Ksawex4/NovaProot-Hub/blob/main/data/Block_JumperCover.png?raw=true"
-	},
-	"bouncy-onurb-fun": {
-		"repo": "Ksawex4/Bouncy-onurB-Fun",
-		"name": "Bouncy onurB Fun",
-		"icon": "https://github.com/Ksawex4/NovaProot-Hub/blob/main/data/BouncyCover.png?raw=true"
-	},
-	"nova-proot-hub": 
-	{
-		"repo": "Ksawex4/NovaProot-Hub",
-		"name": "NovaProot Hub",
-		"icon": ""
+  "block-jumper": {
+    "type": "forgejo",
+    "url": "https://codeberg.org/",
+    "repo": "NovaProot/Block-Jumper",
+    "name": "Block Jumper",
+    "icon": "https://codeberg.org/NovaProot/NovaProot-Hub/raw/branch/main/data/Block_JumperCover.png"
+  },
+  "block-jumper-godot": {
+    "type": "forgejo",
+    "url": "https://codeberg.org/",
+    "repo": "NovaProot/Block-Jumper-Godot",
+    "name": "Block Jumper Godot",
+    "icon": "https://codeberg.org/NovaProot/NovaProot-Hub/raw/branch/main/data/Block_JumperCover.png"
+  },
+  "bouncy-onurb-fun": {
+    "type": "forgejo",
+    "url": "https://codeberg.org/"
+    "repo": "NovaProot/Bouncy-onurB-Fun",
+    "name": "Bouncy onurB Fun",
+    "icon": "https://codeberg.org/NovaProot/NovaProot-Hub/raw/branch/main/data/BouncyCover.png"
+  },
+  "nova-proot-hub": {
+    "type": "forgejo",
+    "url": "https://codeberg.org/",
+    "repo": "NovaProot/NovaProot-Hub",
+    "name": "NovaProot Hub",
+    "icon": ""
 	}
 }
